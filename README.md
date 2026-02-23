@@ -1,5 +1,3 @@
-![Nobody Who](./assets/banner.png)
-
 [![Discord](https://img.shields.io/discord/1308812521456799765?logo=discord&style=flat-square)](https://discord.gg/qhaMc2qCYB)
 [![Matrix](https://img.shields.io/badge/Matrix-000?logo=matrix&logoColor=fff)](https://matrix.to/#/#nobodywho:matrix.org)
 [![Mastodon](https://img.shields.io/badge/Mastodon-6364FF?logo=mastodon&logoColor=fff&style=flat-square)](https://mastodon.gamedev.place/@nobodywho)
@@ -11,14 +9,12 @@ The goal of this starter app is to showcase the following :
 - how to integrate the library in your project
 - how to chat with a model
 
-## Licensing
+# Get Started
 
-There has been some confusion about the licensing terms of NobodyWho. To clarify:
+Install dependencies with `flutter pub get`.
 
-> Linking two programs or linking an existing software with your own work does not – at least under European law – produce a derivative or extend the coverage of the linked software licence to your own work. [[1]](https://interoperable-europe.ec.europa.eu/collection/eupl/licence-compatibility-permissivity-reciprocity-and-interoperability)
+Download a compatible LLM model in `.gguf` format, like this [one](https://huggingface.co/bartowski/Qwen_Qwen3-0.6B-GGUF/resolve/main/Qwen_Qwen3-0.6B-Q4_K_M.gguf).
 
-You are allowed to use this plugin in proprietary and commercial projects, free of charge.
+Rename it `model.gguf` and place it in `assets` folder.
 
-If you distribute modified versions of the code *in this repo*, you must open source those changes.
-
-Feel free to make proprietary projects using NobodyWho, but don't make a proprietary fork of NobodyWho.
+Then run the app with `flutter run`.
