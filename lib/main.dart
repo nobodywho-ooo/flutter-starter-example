@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:nobodywho/nobodywho.dart' as nobodywho;
@@ -19,23 +18,19 @@ class MainApp extends StatelessWidget {
   Future<void> _onPressed() async {
     try {
       final dir = await getApplicationDocumentsDirectory();
-      final model = File('${dir.path}/qwen3.gguf');
+      final model = File('${dir.path}/model.gguf');
 
       if (!await model.exists()) {
-        final data = await rootBundle.load('assets/qwen3.gguf');
+        final data = await rootBundle.load('assets/model.gguf');
         await model.writeAsBytes(data.buffer.asUint8List(), flush: true);
       }
 
       final chat = await nobodywho.Chat.fromPath(modelPath: model.path);
       final msg = await chat.ask('Is water wet?').completed();
 
-      if (kDebugMode) {
-        print(msg);
-      }
+      debugPrint(msg);
     } catch (err) {
-      if (kDebugMode) {
-        print("Error :$err");
-      }
+      debugPrint("Error :$err");
     }
   }
 
