@@ -11,6 +11,7 @@ dependencies:
     sdk: flutter
   nobodywho: ^0.3.2-rc1
   path_provider: ^2.1.5
+  get_it: ^9.2.1
 
 dev_dependencies:
   flutter_test:

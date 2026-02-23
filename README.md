@@ -11,7 +11,7 @@ The goal of this starter app is to showcase the following :
 
 # Get Started
 
-Install dependencies with `flutter pub get`.
+Install dependencies with `flutter pub get`. This repo use the common librairies like `get_it` and `path_provider`.
 
 Download a compatible LLM model in `.gguf` format, like this [one](https://huggingface.co/bartowski/Qwen_Qwen3-0.6B-GGUF/resolve/main/Qwen_Qwen3-0.6B-Q4_K_M.gguf).
 
