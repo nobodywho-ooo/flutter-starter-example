@@ -66,6 +66,11 @@ class _ChatScreenState extends State<ChatScreen> {
           final List<AiMessage> messages = [];
 
           for (var message in history) {
+            // We don't want to display these
+            if (message is AiToolRespMessage || message is AiToolCallsMessage) {
+              continue;
+            }
+
             messages.add(
               message.copyWith(
                 content: message.content

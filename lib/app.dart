@@ -29,7 +29,7 @@ class _AppState extends State<App> {
 
     try {
       await getIt<AiRepository>().loadModel();
-      getIt<AiRepository>().createChat();
+      getIt<AiRepository>().createChat(enableTool: true);
 
       setState(() {
         _modelState = .ready;

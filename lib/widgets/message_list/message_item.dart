@@ -13,206 +13,68 @@ class MessageItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return switch (message) {
-      AiDefaultMessage(:final role, :final content, :final hashCode) =>
-        _buildDefaultMessage(
-          id: hashCode.toString(),
-          context: context,
-          role: role,
-          content: content,
-        ),
-      AiToolCallsMessage(:final toolCalls) => _buildToolCallsMessage(
-        context,
-        toolCalls,
-      ),
-      AiToolRespMessage(:final name, :final content) => _buildToolRespMessage(
-        context: context,
-        toolName: name,
-        result: content,
-      ),
-    };
-  }
+    if (message is AiDefaultMessage) {
+      final theme = ShadTheme.of(context);
+      final textTheme = theme.textTheme;
+      final backgroundColor = theme.colorScheme.surfaceMessage;
 
-  Widget _buildDefaultMessage({
-    required String id,
-    required BuildContext context,
-    required AiRole role,
-    required String content,
-  }) {
-    final theme = ShadTheme.of(context);
-    final textTheme = theme.textTheme;
-    final backgroundColor = theme.colorScheme.surfaceMessage;
+      final id = hashCode.toString();
+      final content = message.content;
 
-    return switch (role) {
-      AiRole.system => Center(
-        key: Key(id),
-        child: Container(
-          margin: const EdgeInsets.symmetric(vertical: 8.0),
-          padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 10.0),
-          decoration: BoxDecoration(
-            color: backgroundColor,
-            borderRadius: BorderRadius.circular(12.0),
+      return switch (message.role) {
+        AiRole.system => Center(
+          key: Key(id),
+          child: Container(
+            margin: const EdgeInsets.symmetric(vertical: 8.0),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 12.0,
+              vertical: 10.0,
+            ),
+            decoration: BoxDecoration(
+              color: backgroundColor,
+              borderRadius: BorderRadius.circular(12.0),
+            ),
+            child: Text(
+              content,
+              style: TextStyle(color: Colors.grey.shade700, fontSize: 12.0),
+            ),
           ),
-          child: Text(
+        ),
+        AiRole.assistant => Padding(
+          key: Key(id),
+          padding: EdgeInsets.symmetric(
+            horizontal: 12,
+            vertical: isLast ? 0 : 40,
+          ),
+          child: GptMarkdown(
             content,
-            style: TextStyle(color: Colors.grey.shade700, fontSize: 12.0),
+            style: textTheme.p,
+            highlightBuilder: (context, text, style) =>
+                HighlightText(text: text, style: style),
           ),
         ),
-      ),
-      AiRole.assistant => Padding(
-        key: Key(id),
-        padding: EdgeInsets.symmetric(
-          horizontal: 12,
-          vertical: isLast ? 0 : 40,
-        ),
-        child: GptMarkdown(
-          content,
-          style: textTheme.p,
-          highlightBuilder: (context, text, style) =>
-              HighlightText(text: text, style: style),
-        ),
-      ),
-      _ => Align(
-        key: Key(id),
-        alignment: Alignment.centerRight,
-        child: Container(
-          margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
-          constraints: BoxConstraints(
-            maxWidth: MediaQuery.of(context).size.width * 0.85,
-          ),
-          decoration: BoxDecoration(
-            color: backgroundColor,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
-            child: Text(content, style: textTheme.p),
+        _ => Align(
+          key: Key(id),
+          alignment: Alignment.centerRight,
+          child: Container(
+            margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+            constraints: BoxConstraints(
+              maxWidth: MediaQuery.of(context).size.width * 0.85,
+            ),
+            decoration: BoxDecoration(
+              color: backgroundColor,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+              child: Text(content, style: textTheme.p),
+            ),
           ),
         ),
-      ),
-    };
-  }
+      };
+    }
 
-  Widget _buildToolCallsMessage(
-    BuildContext context,
-    List<AiToolCall> toolCalls,
-  ) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
-      child: Card(
-        color: Colors.blue.shade50,
-        child: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Icon(Icons.call_made, size: 16, color: Colors.blue.shade700),
-                  const SizedBox(width: 8),
-                  Text(
-                    'Tool Calls',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12.0,
-                      color: Colors.blue.shade900,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              for (final toolCall in toolCalls) ...[
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(8),
-                  margin: const EdgeInsets.only(bottom: 4),
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade100,
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        toolCall.name,
-                        style: TextStyle(
-                          fontSize: 11,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.blue.shade800,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        toolCall.arguments.toString(),
-                        style: const TextStyle(
-                          fontSize: 11,
-                          fontFamily: 'monospace',
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildToolRespMessage({
-    required BuildContext context,
-    required String toolName,
-    required String result,
-  }) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
-      child: Card(
-        color: Colors.green.shade50,
-        child: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Icon(
-                    Icons.call_received,
-                    size: 16,
-                    color: Colors.green.shade700,
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    'Tool Response: $toolName',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12.0,
-                      color: Colors.green.shade900,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: Colors.green.shade100,
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                child: Text(
-                  result,
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontFamily: 'monospace',
-                    color: Colors.green.shade800,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+    // Other types are irrelevant for now
+    return SizedBox.shrink();
   }
 }

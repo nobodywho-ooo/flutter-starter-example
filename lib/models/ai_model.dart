@@ -10,5 +10,6 @@ typedef AiDefaultMessage = nobodywho.Message_Message;
 typedef AiToolCallsMessage = nobodywho.Message_ToolCalls;
 typedef AiToolRespMessage = nobodywho.Message_ToolResp;
 
+typedef AiTool = nobodywho.Tool;
 typedef AiToolCall = nobodywho.ToolCall;
 typedef AiRole = nobodywho.Role;

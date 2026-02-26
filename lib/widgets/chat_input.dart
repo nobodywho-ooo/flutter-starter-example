@@ -40,7 +40,7 @@ class ChatInput extends StatelessWidget {
         : 'Type a message...';
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(8, 0, 8, 26),
+      padding: const EdgeInsets.fromLTRB(10, 4, 10, 26),
       child: Row(
         crossAxisAlignment: .end,
         children: [

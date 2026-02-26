@@ -9,10 +9,11 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  nobodywho: ^0.3.2-rc1
-  path_provider: ^2.1.5
   get_it: ^9.2.1
   gpt_markdown: ^1.1.5
+  http: ^1.6.0
+  path_provider: ^2.1.5
+  nobodywho: ^0.3.2-rc1
   shadcn_ui: ^0.46.1
 
 dev_dependencies:
