@@ -27,7 +27,14 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Chat")),
+      appBar: AppBar(
+        title: Text("Chat"),
+        scrolledUnderElevation: 0,
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(1),
+          child: Divider(height: 1),
+        ),
+      ),
       body: Container(),
     );
   }
