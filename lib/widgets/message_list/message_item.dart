@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_starter_example/models/models.dart';
-import 'package:flutter_starter_example/widgets/message_list/widgets/highlight_text.dart';
+import 'package:flutter_starter_example/theme/theme.dart';
+import 'package:flutter_starter_example/widgets/message_list/highlight_text.dart';
 import 'package:gpt_markdown/gpt_markdown.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
@@ -18,16 +19,16 @@ class MessageItem extends StatelessWidget {
           id: hashCode.toString(),
           context: context,
           role: role,
-          content: content.replaceAll(RegExp(r'</?think>'), ''),
+          content: content,
         ),
       AiToolCallsMessage(:final toolCalls) => _buildToolCallsMessage(
         context,
         toolCalls,
       ),
       AiToolRespMessage(:final name, :final content) => _buildToolRespMessage(
-        context,
-        name,
-        content.replaceAll(RegExp(r'</?think>'), ''),
+        context: context,
+        toolName: name,
+        result: content,
       ),
     };
   }
@@ -38,6 +39,10 @@ class MessageItem extends StatelessWidget {
     required AiRole role,
     required String content,
   }) {
+    final theme = ShadTheme.of(context);
+    final textTheme = theme.textTheme;
+    final backgroundColor = theme.colorScheme.surfaceMessage;
+
     return switch (role) {
       AiRole.system => Center(
         key: Key(id),
@@ -45,7 +50,7 @@ class MessageItem extends StatelessWidget {
           margin: const EdgeInsets.symmetric(vertical: 8.0),
           padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 10.0),
           decoration: BoxDecoration(
-            color: Colors.grey.shade200,
+            color: backgroundColor,
             borderRadius: BorderRadius.circular(12.0),
           ),
           child: Text(
@@ -62,7 +67,7 @@ class MessageItem extends StatelessWidget {
         ),
         child: GptMarkdown(
           content,
-          style: ShadTheme.of(context).textTheme.p,
+          style: textTheme.p,
           highlightBuilder: (context, text, style) =>
               HighlightText(text: text, style: style),
         ),
@@ -76,12 +81,12 @@ class MessageItem extends StatelessWidget {
             maxWidth: MediaQuery.of(context).size.width * 0.85,
           ),
           decoration: BoxDecoration(
-            color: Colors.grey.shade100,
+            color: backgroundColor,
             borderRadius: BorderRadius.circular(10),
           ),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
-            child: Text(content, style: ShadTheme.of(context).textTheme.p),
+            child: Text(content, style: textTheme.p),
           ),
         ),
       ),
@@ -155,11 +160,11 @@ class MessageItem extends StatelessWidget {
     );
   }
 
-  Widget _buildToolRespMessage(
-    BuildContext context,
-    String toolName,
-    String result,
-  ) {
+  Widget _buildToolRespMessage({
+    required BuildContext context,
+    required String toolName,
+    required String result,
+  }) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
       child: Card(

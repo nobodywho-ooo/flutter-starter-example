@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_starter_example/models/models.dart';
-import 'package:flutter_starter_example/widgets/message_list/widgets/message_item.dart';
-import 'package:flutter_starter_example/widgets/message_list/widgets/streaming_message_item.dart';
+import 'package:flutter_starter_example/widgets/message_list/message_item.dart';
+import 'package:flutter_starter_example/widgets/message_list/streaming_message_item.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 class MessageList extends StatefulWidget {
   final List<AiMessage> messages;
+  final bool thinking;
   final String? streamingContent;
 
-  const MessageList({super.key, required this.messages, this.streamingContent});
+  const MessageList({
+    super.key,
+    required this.messages,
+    required this.thinking,
+    this.streamingContent,
+  });
 
   @override
   State<MessageList> createState() => _MessageListState();
@@ -83,6 +89,19 @@ class _MessageListState extends State<MessageList> {
             isLast: totalItems == index - 1,
           );
         } else {
+          if (widget.thinking) {
+            return Align(
+              alignment: AlignmentGeometry.centerLeft,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(10, 20, 0, 20),
+                child: SizedBox(
+                  height: 20,
+                  width: 20,
+                  child: CircularProgressIndicator(),
+                ),
+              ),
+            );
+          }
           return StreamingMessageItem(
             content: streamingContent ?? '',
             isLast: totalItems == index - 1,

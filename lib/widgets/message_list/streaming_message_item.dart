@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_starter_example/widgets/message_list/widgets/highlight_text.dart';
+import 'package:flutter_starter_example/widgets/message_list/highlight_text.dart';
 import 'package:gpt_markdown/gpt_markdown.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 

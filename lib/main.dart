@@ -25,18 +25,16 @@ class MainApp extends StatelessWidget {
 
     return ShadApp.custom(
       themeMode: themeMode,
-      darkTheme: ShadThemeData(
-        brightness: Brightness.dark,
-        colorScheme: ShadColorScheme.fromName(
-          'neutral',
-          brightness: Brightness.dark,
-        ),
-      ),
       theme: ShadThemeData(
         brightness: Brightness.light,
-        colorScheme: ShadColorScheme.fromName(
-          'neutral',
-          brightness: Brightness.light,
+        colorScheme: ShadNeutralColorScheme.light(
+          custom: {'surfaceMessage': Color.fromARGB(255, 245, 245, 245)},
+        ),
+      ),
+      darkTheme: ShadThemeData(
+        brightness: Brightness.dark,
+        colorScheme: ShadNeutralColorScheme.dark(
+          custom: {'surfaceMessage': Color.fromARGB(255, 52, 52, 52)},
         ),
       ),
       appBuilder: (context) {
