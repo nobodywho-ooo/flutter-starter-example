@@ -1,15 +1,15 @@
 import 'dart:io';
 
 import 'package:flutter/services.dart';
-import 'package:nobodywho/nobodywho.dart' as nobodywho;
+import 'package:flutter_starter_example/models/ai_model.dart';
 import 'package:path_provider/path_provider.dart';
 
 class AiRepository {
-  nobodywho.Model? _model;
-  nobodywho.Chat? _chat;
+  AiModel? _model;
+  AiChat? _chat;
 
-  nobodywho.Model? get model => _model;
-  nobodywho.Chat? get chat => _chat;
+  AiModel? get model => _model;
+  AiChat? get chat => _chat;
 
   AiRepository();
 
@@ -22,12 +22,12 @@ class AiRepository {
       await fileModel.writeAsBytes(data.buffer.asUint8List(), flush: true);
     }
 
-    _model = await nobodywho.Model.load(modelPath: fileModel.path);
+    _model = await AiModel.load(modelPath: fileModel.path);
   }
 
   void createChat() {
     if (_model case final model?) {
-      _chat = nobodywho.Chat(model: model);
+      _chat = AiChat(model: model);
     }
   }
 }

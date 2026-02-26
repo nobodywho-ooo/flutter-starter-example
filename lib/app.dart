@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_starter_example/repositories/ai_repository.dart';
-import 'package:flutter_starter_example/screens/chat.dart';
+import 'package:flutter_starter_example/repositories/repositories.dart';
+import 'package:flutter_starter_example/screens/chat_screen.dart';
 import 'package:flutter_starter_example/service_locator.dart';
+import 'package:shadcn_ui/shadcn_ui.dart';
 
 enum AppState { loading, error, ready }
 
@@ -43,6 +44,8 @@ class _AppState extends State<App> {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = ShadTheme.of(context).textTheme;
+
     return switch (_modelState) {
       .loading => Scaffold(
         body: Column(
@@ -51,7 +54,7 @@ class _AppState extends State<App> {
           children: [
             CircularProgressIndicator(),
             SizedBox(height: 20),
-            Center(child: Text("Loading...")),
+            Center(child: Text("Loading...", style: textTheme.large)),
           ],
         ),
       ),
@@ -60,9 +63,14 @@ class _AppState extends State<App> {
           mainAxisAlignment: .center,
           crossAxisAlignment: .center,
           children: [
-            Center(child: Text("Something wrong happened")),
-            SizedBox(height: 20),
-            ElevatedButton(onPressed: _loadModel, child: Text("Try again!")),
+            Center(
+              child: Text(
+                "Something wrong happened :/",
+                style: textTheme.large,
+              ),
+            ),
+            SizedBox(height: 16),
+            ShadButton(onPressed: _loadModel, child: const Text('Try again')),
           ],
         ),
       ),
