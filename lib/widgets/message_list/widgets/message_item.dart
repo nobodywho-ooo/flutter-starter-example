@@ -6,17 +6,20 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 
 class MessageItem extends StatelessWidget {
   final AiMessage message;
+  final bool isLast;
 
-  const MessageItem({super.key, required this.message});
+  const MessageItem({super.key, required this.message, required this.isLast});
 
   @override
   Widget build(BuildContext context) {
     return switch (message) {
-      AiDefaultMessage(:final role, :final content) => _buildDefaultMessage(
-        context,
-        role,
-        content,
-      ),
+      AiDefaultMessage(:final role, :final content, :final hashCode) =>
+        _buildDefaultMessage(
+          id: hashCode.toString(),
+          context: context,
+          role: role,
+          content: content.replaceAll(RegExp(r'</?think>'), ''),
+        ),
       AiToolCallsMessage(:final toolCalls) => _buildToolCallsMessage(
         context,
         toolCalls,
@@ -24,65 +27,65 @@ class MessageItem extends StatelessWidget {
       AiToolRespMessage(:final name, :final content) => _buildToolRespMessage(
         context,
         name,
-        content,
+        content.replaceAll(RegExp(r'</?think>'), ''),
       ),
     };
   }
 
-  Widget _buildDefaultMessage(
-    BuildContext context,
-    AiRole role,
-    String content,
-  ) {
-    if (role == AiRole.system) {
-      return _buildSystemMessage(context, content);
-    } else if (role == AiRole.assistant) {
-      return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12),
+  Widget _buildDefaultMessage({
+    required String id,
+    required BuildContext context,
+    required AiRole role,
+    required String content,
+  }) {
+    return switch (role) {
+      AiRole.system => Center(
+        key: Key(id),
+        child: Container(
+          margin: const EdgeInsets.symmetric(vertical: 8.0),
+          padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 10.0),
+          decoration: BoxDecoration(
+            color: Colors.grey.shade200,
+            borderRadius: BorderRadius.circular(12.0),
+          ),
+          child: Text(
+            content,
+            style: TextStyle(color: Colors.grey.shade700, fontSize: 12.0),
+          ),
+        ),
+      ),
+      AiRole.assistant => Padding(
+        key: Key(id),
+        padding: EdgeInsets.symmetric(
+          horizontal: 12,
+          vertical: isLast ? 0 : 40,
+        ),
         child: GptMarkdown(
           content,
           style: ShadTheme.of(context).textTheme.p,
           highlightBuilder: (context, text, style) =>
               HighlightText(text: text, style: style),
         ),
-      );
-    }
-
-    // user
-    return Align(
-      alignment: Alignment.centerRight,
-      child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
-        constraints: BoxConstraints(
-          maxWidth: MediaQuery.of(context).size.width * 0.85,
-        ),
-        decoration: BoxDecoration(
-          color: Colors.grey.shade100,
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
-          child: Text(content, style: ShadTheme.of(context).textTheme.p),
+      ),
+      _ => Align(
+        key: Key(id),
+        alignment: Alignment.centerRight,
+        child: Container(
+          margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+          constraints: BoxConstraints(
+            maxWidth: MediaQuery.of(context).size.width * 0.85,
+          ),
+          decoration: BoxDecoration(
+            color: Colors.grey.shade100,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+            child: Text(content, style: ShadTheme.of(context).textTheme.p),
+          ),
         ),
       ),
-    );
-  }
-
-  Widget _buildSystemMessage(BuildContext context, String content) {
-    return Center(
-      child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 8.0),
-        padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 10.0),
-        decoration: BoxDecoration(
-          color: Colors.grey.shade200,
-          borderRadius: BorderRadius.circular(12.0),
-        ),
-        child: Text(
-          content,
-          style: TextStyle(color: Colors.grey.shade700, fontSize: 12.0),
-        ),
-      ),
-    );
+    };
   }
 
   Widget _buildToolCallsMessage(

@@ -5,13 +5,18 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 
 class StreamingMessageItem extends StatelessWidget {
   final String content;
+  final bool isLast;
 
-  const StreamingMessageItem({super.key, required this.content});
+  const StreamingMessageItem({
+    super.key,
+    required this.content,
+    required this.isLast,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12),
+      padding: EdgeInsets.symmetric(horizontal: 12, vertical: isLast ? 0 : 40),
       child: GptMarkdown(
         content,
         style: ShadTheme.of(context).textTheme.p,

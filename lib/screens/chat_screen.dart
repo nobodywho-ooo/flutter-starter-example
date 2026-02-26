@@ -32,22 +32,24 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Future<void> _sendMessage() async {
-    final text = _textController.text.trim();
-    if (text.isEmpty || chat == null || _responding) return;
+    final userInput = _textController.text.trim();
+
+    if (userInput.isEmpty || chat == null || _responding) return;
 
     if (chat case final chat?) {
       setState(() {
-        _messages.add(AiMessage.message(role: AiRole.user, content: text));
+        _messages.add(AiMessage.message(role: AiRole.user, content: userInput));
         _responding = true;
         _streamingContent = '';
       });
       _textController.clear();
 
       try {
-        final responseStream = chat.ask(text);
+        final tokenStream = chat.ask(userInput);
 
-        await for (final token in responseStream) {
+        await for (final token in tokenStream) {
           if (!mounted) return;
+
           setState(() {
             _streamingContent =
                 (_streamingContent ?? '') +
@@ -56,23 +58,13 @@ class _ChatScreenState extends State<ChatScreen> {
         }
 
         // Streaming complete - fetch the actual chat history from the backend
-        // This ensures we have the correct messages including any tool calls/responses
+        // This delete streaming content and add it to the history so it's display as a normal message list item
         if (mounted) {
           final history = await chat.getChatHistory();
-          List<AiMessage> messages = [];
-          for (var message in history) {
-            // TODO: do the same for others messages
-            messages.add(
-              AiMessage.message(
-                role: message.role,
-                content: message.content.replaceAll(RegExp(r'</?think>'), ''),
-              ),
-            );
-          }
+
           setState(() {
-            // Keep the initial system message, replace the rest with actual history
             _messages.clear();
-            _messages.addAll(messages);
+            _messages.addAll(history);
             _streamingContent = null;
           });
         }
@@ -107,7 +99,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Chat", style: theme.textTheme.h3),
+        title: Text("Chat", style: theme.textTheme.h4),
         backgroundColor: theme.colorScheme.background,
         scrolledUnderElevation: 0,
         bottom: PreferredSize(

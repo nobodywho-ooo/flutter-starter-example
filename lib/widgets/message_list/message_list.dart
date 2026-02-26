@@ -45,6 +45,19 @@ class _MessageListState extends State<MessageList> {
     super.dispose();
   }
 
+  Widget _buildEmptyChatView(ShadTextTheme textTheme) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: .center,
+        children: [
+          Icon(LucideIcons.messageSquare, size: 48, color: Colors.blueGrey),
+          const SizedBox(height: 16),
+          Text('Start a conversation', style: textTheme.p),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = ShadTheme.of(context);
@@ -56,16 +69,7 @@ class _MessageListState extends State<MessageList> {
     final totalItems = messages.length + (streamingContent != null ? 1 : 0);
 
     if (messages.isEmpty && !hasStreamingContent) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: .center,
-          children: [
-            Icon(LucideIcons.messageSquare, size: 48, color: Colors.blueGrey),
-            const SizedBox(height: 16),
-            Text('Start a conversation', style: theme.textTheme.p),
-          ],
-        ),
-      );
+      return _buildEmptyChatView(theme.textTheme);
     }
 
     return ListView.builder(
@@ -74,9 +78,15 @@ class _MessageListState extends State<MessageList> {
       itemCount: totalItems,
       itemBuilder: (context, index) {
         if (index < messages.length) {
-          return MessageItem(message: messages[index]);
+          return MessageItem(
+            message: messages[index],
+            isLast: totalItems == index - 1,
+          );
         } else {
-          return StreamingMessageItem(content: streamingContent ?? '');
+          return StreamingMessageItem(
+            content: streamingContent ?? '',
+            isLast: totalItems == index - 1,
+          );
         }
       },
     );
