@@ -14,12 +14,20 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
+  final aiRepository = getIt<AiRepository>();
   AppState _modelState = .loading;
 
   @override
   void initState() {
     super.initState();
+
     _loadModel();
+  }
+
+  @override
+  void dispose() {
+    aiRepository.disposeModel();
+    super.dispose();
   }
 
   Future<void> _loadModel() async {
@@ -28,14 +36,15 @@ class _AppState extends State<App> {
     });
 
     try {
-      await getIt<AiRepository>().loadModel();
-      getIt<AiRepository>().createChat(enableTool: true);
+      await aiRepository.loadModel();
+      aiRepository.createChat(enableTool: true);
 
       setState(() {
         _modelState = .ready;
       });
     } catch (err) {
       debugPrint("Error :$err");
+
       setState(() {
         _modelState = .error;
       });

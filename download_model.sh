@@ -1,0 +1,24 @@
+#!/bin/bash
+# Download Qwen3-0.6B GGUF model for macOS and Linux
+
+set -e
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+ASSETS_DIR="$SCRIPT_DIR/assets"
+URL="https://huggingface.co/bartowski/Qwen_Qwen3-0.6B-GGUF/resolve/main/Qwen_Qwen3-0.6B-Q4_K_M.gguf"
+OUTPUT="$ASSETS_DIR/model.gguf"
+
+mkdir -p "$ASSETS_DIR"
+
+echo "Downloading Qwen3-0.6B Q4_K_M model..."
+
+if command -v curl &> /dev/null; then
+    curl -L -o "$OUTPUT" "$URL"
+elif command -v wget &> /dev/null; then
+    wget -O "$OUTPUT" "$URL"
+else
+    echo "Error: curl or wget is required." >&2
+    exit 1
+fi
+
+echo "Done. Model saved to $OUTPUT"

@@ -3,18 +3,55 @@
 [![Mastodon](https://img.shields.io/badge/Mastodon-6364FF?logo=mastodon&logoColor=fff&style=flat-square)](https://mastodon.gamedev.place/@nobodywho)
 [![Docs](https://img.shields.io/badge/Docs-lightblue?style=flat-square)](https://docs.nobodywho.ooo)
 
-This starter app demonstrate the capabilities of [NobodyWho](https://github.com/nobodywho-ooo/nobodywho), a library that lets you run LLMs locally and efficiently on any device.
+# NobodyWho Starter App
 
-The goal of this starter app is to showcase the following :
-- how to integrate the library in your project
-- how to chat with a model
+This starter app demonstrates the capabilities of **[NobodyWho](https://github.com/nobodywho-ooo/nobodywho)**, a library designed to run LLMs locally and efficiently on any device.
 
-# Get Started
+## Purpose
 
-Install dependencies with `flutter pub get`. This repo use the common librairies like `get_it` and `path_provider`.
+This example app illustrates:
+- How to integrate the library into your project
+- How to chat with a model
 
-Download a compatible LLM model in `.gguf` format, like this [one](https://huggingface.co/bartowski/Qwen_Qwen3-0.6B-GGUF/resolve/main/Qwen_Qwen3-0.6B-Q4_K_M.gguf).
+The app has been tested and confirmed to work on **iOS, Android, and macOS**, and it should also function on **Linux and Windows**. Flutter web is not currently supported.
 
-Rename it `model.gguf` and place it in `assets` folder.
+---
 
-Then run the app with `flutter run`.
+## Getting Started
+
+### 1. Install Dependencies
+
+Run the following command to install the required dependencies:
+```bash
+flutter pub get
+```
+This project uses common libraries such as `get_it` and `path_provider`.
+
+---
+
+### 2. Download a Model
+
+#### Automated Download (Recommended)
+- **macOS/Linux**: Run the script `./download_model.sh`
+- **Windows**: Run the script `.\download_model.ps1`
+
+These scripts will automatically download the [Qwen3-0.6B model](https://huggingface.co/bartowski/Qwen_Qwen3-0.6B-GGUF/resolve/main/Qwen_Qwen3-0.6B-Q4_K_M.gguf), rename it to `model.gguf`, and place it in the `assets` folder.
+
+#### Manual Download
+Alternatively, you can manually download any `.gguf` model from Hugging Face. However, not all models are guaranteed to work out of the box, and some may require a powerful machine.
+
+---
+
+### 3. Run the App
+
+Start the app with:
+```bash
+flutter run
+```
+
+---
+
+## Important Notes
+
+- **Singleton Usage**: For optimal performance, the NobodyWho engine should be used as a singleton. This example uses `get_it`, but you can replace it with your preferred dependency injection solution.
+- **Resource Management**: Always dispose of models when the app is terminated to free up resources.

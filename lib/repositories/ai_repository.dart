@@ -15,7 +15,7 @@ final _circleAreaTool = AiTool(
   },
 );
 
-final _getWeather = AiTool(
+final _getWeatherTool = AiTool(
   name: "get_weather",
   description: "Get the weather of a city",
   function: ({required String city}) async {
@@ -45,8 +45,18 @@ class AiRepository {
     _model = await AiModel.load(modelPath: fileModel.path);
   }
 
+  void disposeModel() {
+    if (_model case final model?) {
+      if (!model.isDisposed) {
+        model.dispose();
+      }
+    }
+  }
+
   void createChat({bool enableTool = false}) {
-    final List<AiTool> tools = enableTool ? [_circleAreaTool, _getWeather] : [];
+    final List<AiTool> tools = enableTool
+        ? [_circleAreaTool, _getWeatherTool]
+        : [];
 
     if (_model case final model?) {
       _chat = AiChat(model: model, tools: tools);
