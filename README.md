@@ -5,7 +5,7 @@
 [![Mastodon](https://img.shields.io/badge/Mastodon-6364FF?logo=mastodon&logoColor=fff&style=flat-square)](https://mastodon.gamedev.place/@nobodywho)
 [![Docs](https://img.shields.io/badge/Docs-lightblue?style=flat-square)](https://docs.nobodywho.ooo)
 
-# NobodyWho Starter App
+# NobodyWho Flutter Starter App
 
 This starter app demonstrates the capabilities of **[NobodyWho](https://github.com/nobodywho-ooo/nobodywho)**, a library designed to run LLMs locally and efficiently on any device.
 
@@ -29,8 +29,6 @@ flutter pub get
 ```
 This project uses common libraries such as `get_it` and `path_provider`.
 
----
-
 ### 2. Download a Model
 
 #### Automated Download (Recommended)
@@ -41,8 +39,6 @@ These scripts will automatically download the [Qwen3-0.6B model](https://hugging
 
 #### Manual Download
 Alternatively, you can manually download any `.gguf` model from Hugging Face. However, not all models are guaranteed to work out of the box, and some may require a powerful machine.
-
----
 
 ### 3. Run the App
 
@@ -65,5 +61,3 @@ We welcome your feedback and ideas!
 
 - **Bug Reports & Improvements**: If you encounter a bug or have suggestions for improving this example app, please open an issue on our **[Issues](https://github.com/nobodywho-ooo/flutter-starter-example/issues)** page.
 - **Feature Requests & Questions**: For new feature requests or general questions, join the discussion on our **[Discussions](https://github.com/nobodywho-ooo/flutter-starter-example/discussions)** page.
-
----
