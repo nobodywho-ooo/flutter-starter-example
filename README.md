@@ -1,3 +1,5 @@
+![Nobody Who](./preview.png)
+
 [![Discord](https://img.shields.io/discord/1308812521456799765?logo=discord&style=flat-square)](https://discord.gg/qhaMc2qCYB)
 [![Matrix](https://img.shields.io/badge/Matrix-000?logo=matrix&logoColor=fff)](https://matrix.to/#/#nobodywho:matrix.org)
 [![Mastodon](https://img.shields.io/badge/Mastodon-6364FF?logo=mastodon&logoColor=fff&style=flat-square)](https://mastodon.gamedev.place/@nobodywho)
@@ -51,7 +53,17 @@ flutter run
 
 ---
 
-## Important Notes
+## Notes
 
 - **Singleton Usage**: For optimal performance, the NobodyWho engine should be used as a singleton. This example uses `get_it`, but you can replace it with your preferred dependency injection solution.
-- **Resource Management**: Always dispose of models when the app is terminated to free up resources.
+
+---
+
+## Feedback & Contributions
+
+We welcome your feedback and ideas!
+
+- **Bug Reports & Improvements**: If you encounter a bug or have suggestions for improving this example app, please open an issue on our **[Issues](https://github.com/nobodywho-ooo/flutter-starter-example/issues)** page.
+- **Feature Requests & Questions**: For new feature requests or general questions, join the discussion on our **[Discussions](https://github.com/nobodywho-ooo/flutter-starter-example/discussions)** page.
+
+---

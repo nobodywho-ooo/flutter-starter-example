@@ -39,6 +39,7 @@ class MainApp extends StatelessWidget {
       ),
       appBuilder: (context) {
         return MaterialApp(
+          debugShowCheckedModeBanner: false,
           theme: Theme.of(context),
           home: App(),
           builder: (context, child) {
