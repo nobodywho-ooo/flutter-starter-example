@@ -94,10 +94,16 @@ class _MessageListState extends State<MessageList> {
               alignment: AlignmentGeometry.centerLeft,
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(10, 20, 0, 20),
-                child: SizedBox(
-                  height: 20,
-                  width: 20,
-                  child: CircularProgressIndicator(),
+                child: Row(
+                  children: [
+                    SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: CircularProgressIndicator(),
+                    ),
+                    SizedBox(width: 8),
+                    Text("Thinking...", style: theme.textTheme.p),
+                  ],
                 ),
               ),
             );

@@ -15,13 +15,14 @@ class App extends StatefulWidget {
 
 class _AppState extends State<App> {
   final aiRepository = getIt<AiRepository>();
-  AppState _modelState = .loading;
+
+  AppState _appState = .loading;
 
   @override
   void initState() {
     super.initState();
 
-    _loadModel();
+    _loadChatModel();
   }
 
   @override
@@ -30,23 +31,23 @@ class _AppState extends State<App> {
     super.dispose();
   }
 
-  Future<void> _loadModel() async {
+  Future<void> _loadChatModel() async {
     setState(() {
-      _modelState = .loading;
+      _appState = .loading;
     });
 
     try {
       await aiRepository.loadChatModel();
-      aiRepository.createChat(enableTool: true);
+      aiRepository.createChat(tools: [circleAreaTool, getWeatherTool]);
 
       setState(() {
-        _modelState = .ready;
+        _appState = .ready;
       });
     } catch (err) {
       debugPrint("Error :$err");
 
       setState(() {
-        _modelState = .error;
+        _appState = .error;
       });
     }
   }
@@ -55,7 +56,7 @@ class _AppState extends State<App> {
   Widget build(BuildContext context) {
     final textTheme = ShadTheme.of(context).textTheme;
 
-    return switch (_modelState) {
+    return switch (_appState) {
       .loading => Scaffold(
         body: Column(
           mainAxisAlignment: .center,
@@ -79,7 +80,10 @@ class _AppState extends State<App> {
               ),
             ),
             SizedBox(height: 16),
-            ShadButton(onPressed: _loadModel, child: const Text('Try again')),
+            ShadButton(
+              onPressed: _loadChatModel,
+              child: const Text('Try again'),
+            ),
           ],
         ),
       ),

@@ -6,7 +6,7 @@ import 'package:flutter_starter_example/models/models.dart';
 import 'package:flutter_starter_example/repositories/repositories.dart';
 import 'package:path_provider/path_provider.dart';
 
-final _circleAreaTool = AiTool(
+final circleAreaTool = AiTool(
   name: "circle_area",
   description: "Calculates the area of a circle given its radius",
   function: ({required double radius}) {
@@ -15,7 +15,7 @@ final _circleAreaTool = AiTool(
   },
 );
 
-final _getWeatherTool = AiTool(
+final getWeatherTool = AiTool(
   name: "get_weather",
   description: "Get the weather of a city",
   function: ({required String city}) async {
@@ -26,13 +26,13 @@ final _getWeatherTool = AiTool(
 
 class AiRepository {
   AiChatModel? _chatModel;
-  AiEncoderModel? _encoderModel;
-  AiCrossEncoderModel? _crossEncoderModel;
+  AiEncoder? _encoder;
+  AiCrossEncoder? _crossEncoder;
   AiChat? _chat;
 
   AiChatModel? get chatModel => _chatModel;
-  AiEncoderModel? get encoderModel => _encoderModel;
-  AiCrossEncoderModel? get crossEncoderModel => _crossEncoderModel;
+  AiEncoder? get encoder => _encoder;
+  AiCrossEncoder? get crossEncoder => _crossEncoder;
   AiChat? get chat => _chat;
 
   AiRepository();
@@ -58,10 +58,10 @@ class AiRepository {
       await fileModel.writeAsBytes(data.buffer.asUint8List(), flush: true);
     }
 
-    _encoderModel = await AiEncoderModel.fromPath(modelPath: fileModel.path);
+    _encoder = await AiEncoder.fromPath(modelPath: fileModel.path);
   }
 
-  Future<void> loadRerankerModel() async {
+  Future<void> loadReRankerModel() async {
     final dir = await getApplicationDocumentsDirectory();
     final fileModel = File('${dir.path}/reranker-model.gguf');
 
@@ -70,9 +70,7 @@ class AiRepository {
       await fileModel.writeAsBytes(data.buffer.asUint8List(), flush: true);
     }
 
-    _crossEncoderModel = await AiCrossEncoderModel.fromPath(
-      modelPath: fileModel.path,
-    );
+    _crossEncoder = await AiCrossEncoder.fromPath(modelPath: fileModel.path);
   }
 
   void dispose() {
@@ -81,27 +79,24 @@ class AiRepository {
         model.dispose();
       }
     }
-    if (_encoderModel case final model?) {
+    if (_encoder case final model?) {
       if (!model.isDisposed) {
         model.dispose();
       }
     }
-    if (_crossEncoderModel case final model?) {
+    if (_crossEncoder case final model?) {
       if (!model.isDisposed) {
         model.dispose();
       }
     }
   }
 
-  void createChat({bool enableTool = false}) {
-    final List<AiTool> tools = enableTool
-        ? [_circleAreaTool, _getWeatherTool]
-        : [];
-
+  void createChat({List<AiTool> tools = const [], String? systemPrompt}) {
     if (_chatModel case final model?) {
       _chat = AiChat(
         model: model,
         tools: tools,
+        systemPrompt: systemPrompt,
         // Sampler example
         // sampler: AiSamplerBuilder()
         //     .temperature(temperature: 0.8)

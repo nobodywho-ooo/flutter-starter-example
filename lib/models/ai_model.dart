@@ -1,8 +1,8 @@
 import 'package:nobodywho/nobodywho.dart' as nobodywho;
 
 typedef AiChatModel = nobodywho.Model;
-typedef AiEncoderModel = nobodywho.Encoder;
-typedef AiCrossEncoderModel = nobodywho.CrossEncoder;
+typedef AiEncoder = nobodywho.Encoder;
+typedef AiCrossEncoder = nobodywho.CrossEncoder;
 
 typedef AiChat = nobodywho.Chat;
 

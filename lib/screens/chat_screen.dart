@@ -25,12 +25,12 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   void initState() {
     super.initState();
-    _messages.add(
-      AiMessage.message(
-        role: AiRole.system,
-        content: 'Chat ready. Send a message to begin!',
-      ),
-    );
+    // _messages.add(
+    //   AiMessage.message(
+    //     role: AiRole.system,
+    //     content: 'Chat ready. Send a message to begin!',
+    //   ),
+    // );
   }
 
   Future<void> _sendMessage() async {
@@ -121,6 +121,8 @@ class _ChatScreenState extends State<ChatScreen> {
         title: Text("Chat", style: theme.textTheme.h4),
         backgroundColor: theme.colorScheme.background,
         scrolledUnderElevation: 0,
+        leading: EmbeddingIcon(),
+        actions: [RagIcon()],
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(1),
           child: Divider(height: 1),
