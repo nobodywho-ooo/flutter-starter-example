@@ -13,3 +13,6 @@ typedef AiToolRespMessage = nobodywho.Message_ToolResp;
 typedef AiTool = nobodywho.Tool;
 typedef AiToolCall = nobodywho.ToolCall;
 typedef AiRole = nobodywho.Role;
+
+typedef AiSamplerPresets = nobodywho.SamplerPresets;
+typedef AiSamplerBuilder = nobodywho.SamplerBuilder;

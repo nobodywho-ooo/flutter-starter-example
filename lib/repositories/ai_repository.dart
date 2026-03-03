@@ -59,7 +59,15 @@ class AiRepository {
         : [];
 
     if (_model case final model?) {
-      _chat = AiChat(model: model, tools: tools);
+      _chat = AiChat(
+        model: model,
+        tools: tools,
+        // Sampler example
+        // sampler: AiSamplerBuilder()
+        //     .temperature(temperature: 0.8)
+        //     .topK(topK: 5)
+        //     .dist(),
+      );
     }
   }
 }
