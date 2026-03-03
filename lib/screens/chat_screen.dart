@@ -25,12 +25,12 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   void initState() {
     super.initState();
-    // _messages.add(
-    //   AiMessage.message(
-    //     role: AiRole.user,
-    //     content: 'Chat ready. Send a message to begin!',
-    //   ),
-    // );
+    _messages.add(
+      AiMessage.message(
+        role: AiRole.system,
+        content: 'Chat ready. Send a message to begin!',
+      ),
+    );
   }
 
   Future<void> _sendMessage() async {

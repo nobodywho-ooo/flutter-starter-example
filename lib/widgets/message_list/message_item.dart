@@ -36,7 +36,10 @@ class MessageItem extends StatelessWidget {
             ),
             child: Text(
               content,
-              style: TextStyle(color: Colors.grey.shade700, fontSize: 12.0),
+              style: textTheme.p.copyWith(
+                color: Colors.grey.shade700,
+                fontSize: 12.0,
+              ),
             ),
           ),
         ),

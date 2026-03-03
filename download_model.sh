@@ -1,16 +1,16 @@
 #!/bin/bash
-# Download Qwen3-0.6B GGUF model for macOS and Linux
+# Download chat model for macOS and Linux
 
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 ASSETS_DIR="$SCRIPT_DIR/assets"
 URL="https://huggingface.co/bartowski/Qwen_Qwen3-0.6B-GGUF/resolve/main/Qwen_Qwen3-0.6B-Q4_K_M.gguf"
-OUTPUT="$ASSETS_DIR/model.gguf"
+OUTPUT="$ASSETS_DIR/chat-model.gguf"
 
 mkdir -p "$ASSETS_DIR"
 
-echo "Downloading Qwen3-0.6B Q4_K_M model..."
+echo "Downloading chat model..."
 
 if command -v curl &> /dev/null; then
     curl -L -o "$OUTPUT" "$URL"

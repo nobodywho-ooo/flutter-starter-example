@@ -35,7 +35,7 @@ This project uses common libraries such as `get_it` and `path_provider`.
 - **macOS/Linux**: Run the script `./download_model.sh`
 - **Windows**: Run the script `.\download_model.ps1`
 
-These scripts will automatically download the [Qwen3-0.6B model](https://huggingface.co/bartowski/Qwen_Qwen3-0.6B-GGUF/resolve/main/Qwen_Qwen3-0.6B-Q4_K_M.gguf), rename it to `model.gguf`, and place it in the `assets` folder.
+These scripts will automatically download the [Qwen3-0.6B model](https://huggingface.co/bartowski/Qwen_Qwen3-0.6B-GGUF/resolve/main/Qwen_Qwen3-0.6B-Q4_K_M.gguf), rename it to `chat-model.gguf`, and place it in the `assets` folder.
 
 #### Manual Download
 Alternatively, you can manually download any `.gguf` model from Hugging Face. However, not all models are guaranteed to work out of the box, and some may require a powerful machine.

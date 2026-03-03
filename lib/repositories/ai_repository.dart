@@ -25,28 +25,68 @@ final _getWeatherTool = AiTool(
 );
 
 class AiRepository {
-  AiModel? _model;
+  AiChatModel? _chatModel;
+  AiEncoderModel? _encoderModel;
+  AiCrossEncoderModel? _crossEncoderModel;
   AiChat? _chat;
 
-  AiModel? get model => _model;
+  AiChatModel? get chatModel => _chatModel;
+  AiEncoderModel? get encoderModel => _encoderModel;
+  AiCrossEncoderModel? get crossEncoderModel => _crossEncoderModel;
   AiChat? get chat => _chat;
 
   AiRepository();
 
-  Future<void> loadModel() async {
+  Future<void> loadChatModel() async {
     final dir = await getApplicationDocumentsDirectory();
-    final fileModel = File('${dir.path}/model.gguf');
+    final fileModel = File('${dir.path}/chat-model.gguf');
 
     if (!await fileModel.exists()) {
-      final data = await rootBundle.load('assets/model.gguf');
+      final data = await rootBundle.load('assets/chat-model.gguf');
       await fileModel.writeAsBytes(data.buffer.asUint8List(), flush: true);
     }
 
-    _model = await AiModel.load(modelPath: fileModel.path);
+    _chatModel = await AiChatModel.load(modelPath: fileModel.path);
   }
 
-  void disposeModel() {
-    if (_model case final model?) {
+  Future<void> loadEmbeddingModel() async {
+    final dir = await getApplicationDocumentsDirectory();
+    final fileModel = File('${dir.path}/embedding-model.gguf');
+
+    if (!await fileModel.exists()) {
+      final data = await rootBundle.load('assets/embedding-model.gguf');
+      await fileModel.writeAsBytes(data.buffer.asUint8List(), flush: true);
+    }
+
+    _encoderModel = await AiEncoderModel.fromPath(modelPath: fileModel.path);
+  }
+
+  Future<void> loadRerankerModel() async {
+    final dir = await getApplicationDocumentsDirectory();
+    final fileModel = File('${dir.path}/reranker-model.gguf');
+
+    if (!await fileModel.exists()) {
+      final data = await rootBundle.load('assets/reranker-model.gguf');
+      await fileModel.writeAsBytes(data.buffer.asUint8List(), flush: true);
+    }
+
+    _crossEncoderModel = await AiCrossEncoderModel.fromPath(
+      modelPath: fileModel.path,
+    );
+  }
+
+  void dispose() {
+    if (_chatModel case final model?) {
+      if (!model.isDisposed) {
+        model.dispose();
+      }
+    }
+    if (_encoderModel case final model?) {
+      if (!model.isDisposed) {
+        model.dispose();
+      }
+    }
+    if (_crossEncoderModel case final model?) {
       if (!model.isDisposed) {
         model.dispose();
       }
@@ -58,7 +98,7 @@ class AiRepository {
         ? [_circleAreaTool, _getWeatherTool]
         : [];
 
-    if (_model case final model?) {
+    if (_chatModel case final model?) {
       _chat = AiChat(
         model: model,
         tools: tools,

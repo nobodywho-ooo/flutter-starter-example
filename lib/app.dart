@@ -26,7 +26,7 @@ class _AppState extends State<App> {
 
   @override
   void dispose() {
-    aiRepository.disposeModel();
+    aiRepository.dispose();
     super.dispose();
   }
 
@@ -36,7 +36,7 @@ class _AppState extends State<App> {
     });
 
     try {
-      await aiRepository.loadModel();
+      await aiRepository.loadChatModel();
       aiRepository.createChat(enableTool: true);
 
       setState(() {
