@@ -14,8 +14,9 @@ This starter app demonstrates the capabilities of **[NobodyWho](https://github.c
 This example app illustrates:
 - How to integrate the library into your project
 - How to chat with a model
+- How to deal with embeddings, rerank and RAG
 
-The app has been tested and confirmed to work on **iOS, Android, and macOS**, and it should also function on **Linux and Windows**. Flutter web is not currently supported.
+The app has been tested and confirmed to work on **iOS, Android, and macOS**, and it should also work on **Linux and Windows**. Flutter web is not currently supported.
 
 ---
 
@@ -39,8 +40,11 @@ This project uses common libraries such as `get_it` and `path_provider`.
 
 `download_embedding_rerank`, it will download for you [bge-small-en-v1.5](https://huggingface.co/CompendiumLabs/bge-small-en-v1.5-gguf/resolve/main/bge-small-en-v1.5-q8_0.gguf) and [bge-reranker-v2-m3-Q8_0](https://huggingface.co/gpustack/bge-reranker-v2-m3-GGUF/resolve/main/bge-reranker-v2-m3-Q8_0.gguf), place them in the `assets` folder and rename them `embedding-model.gguf` / `reranker-model.gguf`.
 
+Note: if you don't want to try embeddings and rerank/rag, you can simply skip `download_embedding_rerank` script.
+
 #### Manual Download
-Alternatively, you can manually download any `.gguf` model from Hugging Face. However, not all models are guaranteed to work out of the box, and some may require a powerful machine.
+
+Alternatively, you can manually download `.gguf` model from Hugging Face. However, not all models are guaranteed to work out of the box, and some may require a powerful machine.
 
 ### 3. Run the App
 
@@ -49,11 +53,17 @@ Start the app with:
 flutter run
 ```
 
+Or specify a specific platform:
+```bash
+flutter run -d macos
+```
+
 ---
 
 ## Notes
 
 - **Singleton Usage**: For optimal performance, the NobodyWho engine should be used as a singleton. This example uses `get_it`, but you can replace it with your preferred dependency injection solution.
+- Make sure to delete the app from the simulator/testing device everytime you change a model.
 
 ---
 

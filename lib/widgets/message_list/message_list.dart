@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_starter_example/models/models.dart';
 import 'package:flutter_starter_example/widgets/message_list/message_item.dart';
 import 'package:flutter_starter_example/widgets/message_list/streaming_message_item.dart';
+import 'package:flutter_starter_example/styles/styles.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 class MessageList extends StatefulWidget {
@@ -57,7 +58,7 @@ class _MessageListState extends State<MessageList> {
         mainAxisAlignment: .center,
         children: [
           Icon(LucideIcons.messageSquare, size: 48, color: Colors.blueGrey),
-          const SizedBox(height: 16),
+          Spacings.lg.verticalSpace,
           Text('Start a conversation', style: textTheme.p),
         ],
       ),
@@ -80,7 +81,7 @@ class _MessageListState extends State<MessageList> {
 
     return ListView.builder(
       controller: _scrollController,
-      padding: const EdgeInsets.all(8.0),
+      padding: Spacings.sm.all,
       itemCount: totalItems,
       itemBuilder: (context, index) {
         if (index < messages.length) {
@@ -97,11 +98,11 @@ class _MessageListState extends State<MessageList> {
                 child: Row(
                   children: [
                     SizedBox(
-                      height: 20,
-                      width: 20,
-                      child: CircularProgressIndicator(),
+                      height: Spacings.xl.value,
+                      width: Spacings.xl.value,
+                      child: CircularProgressIndicator(color: Colors.blueGrey),
                     ),
-                    SizedBox(width: 8),
+                    Spacings.sm.horizontalSpace,
                     Text("Thinking...", style: theme.textTheme.p),
                   ],
                 ),

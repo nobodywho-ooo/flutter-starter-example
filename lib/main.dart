@@ -8,6 +8,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await NobodyWho.init();
+
   setup();
 
   runApp(const MainApp());
@@ -41,6 +42,11 @@ class MainApp extends StatelessWidget {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           theme: Theme.of(context),
+          darkTheme: Theme.of(context).copyWith(
+            bottomSheetTheme: BottomSheetThemeData(
+              backgroundColor: Colors.grey[850],
+            ),
+          ),
           home: App(),
           builder: (context, child) {
             return ShadAppBuilder(child: child!);

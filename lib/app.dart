@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_starter_example/repositories/repositories.dart';
 import 'package:flutter_starter_example/screens/chat_screen.dart';
 import 'package:flutter_starter_example/service_locator.dart';
+import 'package:flutter_starter_example/styles/styles.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 enum AppState { loading, error, ready }
@@ -54,7 +55,8 @@ class _AppState extends State<App> {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = ShadTheme.of(context).textTheme;
+    final theme = ShadTheme.of(context);
+    final textTheme = theme.textTheme;
 
     return switch (_appState) {
       .loading => Scaffold(
@@ -62,7 +64,7 @@ class _AppState extends State<App> {
           mainAxisAlignment: .center,
           crossAxisAlignment: .center,
           children: [
-            CircularProgressIndicator(),
+            CircularProgressIndicator(color: Colors.blueGrey),
             SizedBox(height: 20),
             Center(child: Text("Loading...", style: textTheme.large)),
           ],
@@ -74,9 +76,20 @@ class _AppState extends State<App> {
           crossAxisAlignment: .center,
           children: [
             Center(
-              child: Text(
-                "Something wrong happened :/",
-                style: textTheme.large,
+              child: Padding(
+                padding: Spacings.lg.horizontal,
+                child: Column(
+                  children: [
+                    Text("Something wrong happened :/", style: textTheme.large),
+                    Text(
+                      "Make sure you have downloaded a chat model",
+                      textAlign: .center,
+                      style: textTheme.p.copyWith(
+                        color: theme.colorScheme.mutedForeground,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
             SizedBox(height: 16),

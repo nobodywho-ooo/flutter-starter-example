@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_starter_example/models/models.dart';
 import 'package:flutter_starter_example/theme/theme.dart';
 import 'package:flutter_starter_example/widgets/message_list/highlight_text.dart';
+import 'package:flutter_starter_example/styles/styles.dart';
 import 'package:gpt_markdown/gpt_markdown.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
@@ -25,11 +26,8 @@ class MessageItem extends StatelessWidget {
         AiRole.system => Center(
           key: Key(id),
           child: Container(
-            margin: const EdgeInsets.symmetric(vertical: 8.0),
-            padding: const EdgeInsets.symmetric(
-              horizontal: 12.0,
-              vertical: 10.0,
-            ),
+            margin: Spacings.xs.vertical,
+            padding: Spacings.md.horizontal + Spacings.sm.vertical,
             decoration: BoxDecoration(
               color: backgroundColor,
               borderRadius: BorderRadius.circular(12.0),
@@ -37,7 +35,7 @@ class MessageItem extends StatelessWidget {
             child: Text(
               content,
               style: textTheme.p.copyWith(
-                color: Colors.grey.shade700,
+                color: Colors.grey.shade500,
                 fontSize: 12.0,
               ),
             ),
@@ -45,10 +43,9 @@ class MessageItem extends StatelessWidget {
         ),
         AiRole.assistant => Padding(
           key: Key(id),
-          padding: EdgeInsets.symmetric(
-            horizontal: 12,
-            vertical: isLast ? 0 : 40,
-          ),
+          padding:
+              Spacings.md.horizontal +
+              (isLast ? Spacings.zero.vertical : Spacings.xxl.vertical),
           child: GptMarkdown(
             content,
             style: textTheme.p,
@@ -60,7 +57,7 @@ class MessageItem extends StatelessWidget {
           key: Key(id),
           alignment: Alignment.centerRight,
           child: Container(
-            margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+            margin: Spacings.xs.horizontal + Spacings.sm.horizontal,
             constraints: BoxConstraints(
               maxWidth: MediaQuery.of(context).size.width * 0.85,
             ),
@@ -69,7 +66,7 @@ class MessageItem extends StatelessWidget {
               borderRadius: BorderRadius.circular(10),
             ),
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+              padding: Spacings.lg.horizontal + Spacings.md.vertical,
               child: Text(content, style: textTheme.p),
             ),
           ),

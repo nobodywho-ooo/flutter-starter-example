@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_starter_example/styles/styles.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 const _sendButtonSize = 52.0;
-const _contentPadding = EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0);
+final _contentPadding = Spacings.lg.horizontal + Spacings.md.vertical;
 
 class ChatInput extends StatelessWidget {
   final TextEditingController controller;
@@ -40,7 +41,7 @@ class ChatInput extends StatelessWidget {
         : 'Type a message...';
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(10, 4, 10, 26),
+      padding: Spacings.md.horizontal + Spacings.xs.top + Spacings.xl.bottom,
       child: Row(
         crossAxisAlignment: .end,
         children: [
@@ -62,43 +63,40 @@ class ChatInput extends StatelessWidget {
               textInputAction: TextInputAction.send,
             ),
           ),
-          const SizedBox(width: 8.0),
+          Spacings.sm.verticalSpace,
           if (responding)
             Padding(
-              padding: const EdgeInsets.only(bottom: 5),
+              padding: Spacings.xs.bottom,
               child: ShadIconButton.destructive(
                 onPressed: onStop,
                 icon: const Icon(Icons.stop_rounded),
               ),
             )
           else
-            Padding(
-              padding: const EdgeInsets.only(bottom: 0),
-              child: ListenableBuilder(
-                listenable: controller,
-                builder: (context, child) {
-                  final enabled = controller.text != '';
-                  final onPressed = controller.text.trim().isNotEmpty
-                      ? onSend
-                      : null;
+            ListenableBuilder(
+              listenable: controller,
+              builder: (context, child) {
+                final enabled = controller.text != '';
+                final onPressed = controller.text.trim().isNotEmpty
+                    ? onSend
+                    : null;
 
-                  if (enabled) {
-                    return ShadIconButton(
-                      height: _sendButtonSize,
-                      width: _sendButtonSize,
-                      onPressed: onPressed,
-                      icon: const Icon(LucideIcons.send),
-                    );
-                  }
-
-                  return ShadIconButton.secondary(
+                if (enabled) {
+                  return ShadIconButton(
                     height: _sendButtonSize,
                     width: _sendButtonSize,
                     onPressed: onPressed,
                     icon: const Icon(LucideIcons.send),
                   );
-                },
-              ),
+                }
+
+                return ShadIconButton.secondary(
+                  height: _sendButtonSize,
+                  width: _sendButtonSize,
+                  onPressed: onPressed,
+                  icon: const Icon(LucideIcons.send),
+                );
+              },
             ),
         ],
       ),
