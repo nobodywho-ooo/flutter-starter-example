@@ -43,6 +43,7 @@ class MainApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           theme: Theme.of(context),
           darkTheme: Theme.of(context).copyWith(
+            dialogTheme: DialogThemeData(backgroundColor: Colors.grey[850]),
             bottomSheetTheme: BottomSheetThemeData(
               backgroundColor: Colors.grey[850],
             ),

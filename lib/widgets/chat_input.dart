@@ -63,7 +63,7 @@ class ChatInput extends StatelessWidget {
               textInputAction: TextInputAction.send,
             ),
           ),
-          Spacings.sm.verticalSpace,
+          Spacings.sm.horizontalSpace,
           if (responding)
             Padding(
               padding: Spacings.xs.bottom,
