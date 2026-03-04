@@ -6,7 +6,7 @@ import 'package:flutter_starter_example/models/models.dart';
 import 'package:flutter_starter_example/repositories/repositories.dart';
 import 'package:path_provider/path_provider.dart';
 
-final _circleAreaTool = AiTool(
+final circleAreaTool = AiTool(
   name: "circle_area",
   description: "Calculates the area of a circle given its radius",
   function: ({required double radius}) {
@@ -15,7 +15,7 @@ final _circleAreaTool = AiTool(
   },
 );
 
-final _getWeatherTool = AiTool(
+final getWeatherTool = AiTool(
   name: "get_weather",
   description: "Get the weather of a city",
   function: ({required String city}) async {
@@ -25,43 +25,78 @@ final _getWeatherTool = AiTool(
 );
 
 class AiRepository {
-  AiModel? _model;
+  AiChatModel? _chatModel;
+  AiEncoder? _encoder;
+  AiCrossEncoder? _crossEncoder;
   AiChat? _chat;
 
-  AiModel? get model => _model;
+  AiChatModel? get chatModel => _chatModel;
+  AiEncoder? get encoder => _encoder;
+  AiCrossEncoder? get crossEncoder => _crossEncoder;
   AiChat? get chat => _chat;
 
   AiRepository();
 
-  Future<void> loadModel() async {
+  Future<void> loadChatModel() async {
     final dir = await getApplicationDocumentsDirectory();
-    final fileModel = File('${dir.path}/model.gguf');
+    final fileModel = File('${dir.path}/chat-model.gguf');
 
     if (!await fileModel.exists()) {
-      final data = await rootBundle.load('assets/model.gguf');
+      final data = await rootBundle.load('assets/chat-model.gguf');
       await fileModel.writeAsBytes(data.buffer.asUint8List(), flush: true);
     }
 
-    _model = await AiModel.load(modelPath: fileModel.path);
+    _chatModel = await AiChatModel.load(modelPath: fileModel.path);
   }
 
-  void disposeModel() {
-    if (_model case final model?) {
+  Future<void> loadEmbeddingModel() async {
+    final dir = await getApplicationDocumentsDirectory();
+    final fileModel = File('${dir.path}/embedding-model.gguf');
+
+    if (!await fileModel.exists()) {
+      final data = await rootBundle.load('assets/embedding-model.gguf');
+      await fileModel.writeAsBytes(data.buffer.asUint8List(), flush: true);
+    }
+
+    _encoder = await AiEncoder.fromPath(modelPath: fileModel.path);
+  }
+
+  Future<void> loadReRankerModel() async {
+    final dir = await getApplicationDocumentsDirectory();
+    final fileModel = File('${dir.path}/reranker-model.gguf');
+
+    if (!await fileModel.exists()) {
+      final data = await rootBundle.load('assets/reranker-model.gguf');
+      await fileModel.writeAsBytes(data.buffer.asUint8List(), flush: true);
+    }
+
+    _crossEncoder = await AiCrossEncoder.fromPath(modelPath: fileModel.path);
+  }
+
+  void dispose() {
+    if (_chatModel case final model?) {
+      if (!model.isDisposed) {
+        model.dispose();
+      }
+    }
+    if (_encoder case final model?) {
+      if (!model.isDisposed) {
+        model.dispose();
+      }
+    }
+    if (_crossEncoder case final model?) {
       if (!model.isDisposed) {
         model.dispose();
       }
     }
   }
 
-  void createChat({bool enableTool = false}) {
-    final List<AiTool> tools = enableTool
-        ? [_circleAreaTool, _getWeatherTool]
-        : [];
-
-    if (_model case final model?) {
+  void createChat({List<AiTool> tools = const [], String? systemPrompt}) {
+    if (_chatModel case final model?) {
       _chat = AiChat(
         model: model,
         tools: tools,
+        systemPrompt: systemPrompt,
         // Sampler example
         // sampler: AiSamplerBuilder()
         //     .temperature(temperature: 0.8)

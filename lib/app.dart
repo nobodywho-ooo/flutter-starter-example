@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_starter_example/repositories/repositories.dart';
 import 'package:flutter_starter_example/screens/chat_screen.dart';
 import 'package:flutter_starter_example/service_locator.dart';
+import 'package:flutter_starter_example/styles/styles.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 enum AppState { loading, error, ready }
@@ -15,53 +16,55 @@ class App extends StatefulWidget {
 
 class _AppState extends State<App> {
   final aiRepository = getIt<AiRepository>();
-  AppState _modelState = .loading;
+
+  AppState _appState = .loading;
 
   @override
   void initState() {
     super.initState();
 
-    _loadModel();
+    _loadChatModel();
   }
 
   @override
   void dispose() {
-    aiRepository.disposeModel();
+    aiRepository.dispose();
     super.dispose();
   }
 
-  Future<void> _loadModel() async {
+  Future<void> _loadChatModel() async {
     setState(() {
-      _modelState = .loading;
+      _appState = .loading;
     });
 
     try {
-      await aiRepository.loadModel();
-      aiRepository.createChat(enableTool: true);
+      await aiRepository.loadChatModel();
+      aiRepository.createChat(tools: [circleAreaTool, getWeatherTool]);
 
       setState(() {
-        _modelState = .ready;
+        _appState = .ready;
       });
     } catch (err) {
       debugPrint("Error :$err");
 
       setState(() {
-        _modelState = .error;
+        _appState = .error;
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = ShadTheme.of(context).textTheme;
+    final theme = ShadTheme.of(context);
+    final textTheme = theme.textTheme;
 
-    return switch (_modelState) {
+    return switch (_appState) {
       .loading => Scaffold(
         body: Column(
           mainAxisAlignment: .center,
           crossAxisAlignment: .center,
           children: [
-            CircularProgressIndicator(),
+            CircularProgressIndicator(color: Colors.blueGrey),
             SizedBox(height: 20),
             Center(child: Text("Loading...", style: textTheme.large)),
           ],
@@ -73,13 +76,27 @@ class _AppState extends State<App> {
           crossAxisAlignment: .center,
           children: [
             Center(
-              child: Text(
-                "Something wrong happened :/",
-                style: textTheme.large,
+              child: Padding(
+                padding: Spacings.lg.horizontal,
+                child: Column(
+                  children: [
+                    Text("Something wrong happened :/", style: textTheme.large),
+                    Text(
+                      "Make sure you have downloaded a chat model",
+                      textAlign: .center,
+                      style: textTheme.p.copyWith(
+                        color: theme.colorScheme.mutedForeground,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
             SizedBox(height: 16),
-            ShadButton(onPressed: _loadModel, child: const Text('Try again')),
+            ShadButton(
+              onPressed: _loadChatModel,
+              child: const Text('Try again'),
+            ),
           ],
         ),
       ),

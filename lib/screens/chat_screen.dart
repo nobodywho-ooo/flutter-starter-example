@@ -27,7 +27,7 @@ class _ChatScreenState extends State<ChatScreen> {
     super.initState();
     // _messages.add(
     //   AiMessage.message(
-    //     role: AiRole.user,
+    //     role: AiRole.system,
     //     content: 'Chat ready. Send a message to begin!',
     //   ),
     // );
@@ -121,6 +121,7 @@ class _ChatScreenState extends State<ChatScreen> {
         title: Text("Chat", style: theme.textTheme.h4),
         backgroundColor: theme.colorScheme.background,
         scrolledUnderElevation: 0,
+        actions: [ChatOptionsIconButton()],
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(1),
           child: Divider(height: 1),

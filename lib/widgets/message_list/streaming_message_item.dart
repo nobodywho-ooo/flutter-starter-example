@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_starter_example/widgets/message_list/highlight_text.dart';
+import 'package:flutter_starter_example/styles/styles.dart';
 import 'package:gpt_markdown/gpt_markdown.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
@@ -15,8 +16,12 @@ class StreamingMessageItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final padding =
+        Spacings.md.horizontal +
+        (isLast ? Spacings.zero.vertical : Spacings.xxl.vertical);
+
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 12, vertical: isLast ? 0 : 40),
+      padding: padding,
       child: GptMarkdown(
         content,
         style: ShadTheme.of(context).textTheme.p,
