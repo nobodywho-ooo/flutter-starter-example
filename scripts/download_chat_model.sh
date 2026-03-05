@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Download chat model for macOS and Linux
 
 set -e
