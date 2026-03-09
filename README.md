@@ -36,7 +36,7 @@ This project uses common libraries such as `get_it` and `path_provider`.
 - **macOS/Linux**: Run `./scripts/download_chat_model.sh && ./scripts/download_embedding_rerank.sh`
 - **Windows**: Run `.\scripts\download_chat_model.ps1; .\scripts\download_embedding_rerank.ps1`
 
-`download_chat_model` will automatically download the [Qwen3-0.6B model](https://huggingface.co/bartowski/Qwen_Qwen3-0.6B-GGUF/resolve/main/Qwen_Qwen3-0.6B-Q4_K_M.gguf), rename it to `chat-model.gguf`, and place it in the `assets` folder.
+`download_chat_model` will automatically download the [Qwen3-0.6B model](https://huggingface.co/NobodyWho/Qwen_Qwen3-0.6B-GGUF/resolve/main/Qwen_Qwen3-0.6B-Q4_K_M.gguf), rename it to `chat-model.gguf`, and place it in the `assets` folder.
 
 `download_embedding_rerank`, it will download for you [bge-small-en-v1.5](https://huggingface.co/CompendiumLabs/bge-small-en-v1.5-gguf/resolve/main/bge-small-en-v1.5-q8_0.gguf) and [bge-reranker-v2-m3-Q8_0](https://huggingface.co/gpustack/bge-reranker-v2-m3-GGUF/resolve/main/bge-reranker-v2-m3-Q8_0.gguf), place them in the `assets` folder and rename them `embedding-model.gguf` / `reranker-model.gguf`.
 

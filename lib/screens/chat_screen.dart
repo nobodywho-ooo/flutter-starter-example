@@ -25,6 +25,7 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   void initState() {
     super.initState();
+    // System message example
     // _messages.add(
     //   AiMessage.message(
     //     role: AiRole.system,
