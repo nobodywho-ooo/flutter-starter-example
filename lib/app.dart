@@ -38,14 +38,15 @@ class _AppState extends State<App> {
     });
 
     try {
-      await aiRepository.loadChatModel();
-      aiRepository.createChat(tools: [circleAreaTool, getWeatherTool]);
+      await aiRepository.loadChatVisionModel();
+      aiRepository.createChat();
+      // aiRepository.createChat(tools: [circleAreaTool, getWeatherTool]);
 
       setState(() {
         _appState = .ready;
       });
     } catch (err) {
-      debugPrint("Error :$err");
+      debugPrint("_loadChatModel error :$err");
 
       setState(() {
         _appState = .error;

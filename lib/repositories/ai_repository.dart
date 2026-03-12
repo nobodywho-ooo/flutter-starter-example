@@ -37,16 +37,28 @@ class AiRepository {
 
   AiRepository();
 
-  Future<void> loadChatModel() async {
+  Future<void> loadChatVisionModel() async {
     final dir = await getApplicationDocumentsDirectory();
-    final fileModel = File('${dir.path}/chat-model.gguf');
+    final chatModelFile = File('${dir.path}/chat-model.gguf');
+    final visionModelFile = File('${dir.path}/vision-model.gguf');
 
-    if (!await fileModel.exists()) {
+    if (!await chatModelFile.exists()) {
       final data = await rootBundle.load('assets/chat-model.gguf');
-      await fileModel.writeAsBytes(data.buffer.asUint8List(), flush: true);
+      await chatModelFile.writeAsBytes(data.buffer.asUint8List(), flush: true);
     }
 
-    _chatModel = await AiChatModel.load(modelPath: fileModel.path);
+    if (!await visionModelFile.exists()) {
+      final visionData = await rootBundle.load('assets/vision-model.gguf');
+      await visionModelFile.writeAsBytes(
+        visionData.buffer.asUint8List(),
+        flush: true,
+      );
+    }
+
+    _chatModel = await AiChatModel.load(
+      modelPath: chatModelFile.path,
+      imageIngestion: visionModelFile.path,
+    );
   }
 
   Future<void> loadEmbeddingModel() async {

@@ -1,9 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_starter_example/helpers/helpers.dart';
 import 'package:flutter_starter_example/service_locator.dart';
 import 'package:flutter_starter_example/repositories/repositories.dart';
 import 'package:flutter_starter_example/models/models.dart';
 import 'package:flutter_starter_example/widgets/widgets.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -113,6 +117,28 @@ class _ChatScreenState extends State<ChatScreen> {
     chat?.stopGeneration();
   }
 
+  Future<void> _imageIngestion() async {
+    try {
+      final dir = await getApplicationDocumentsDirectory();
+      final imageFile = File('${dir.path}/image-1.png');
+
+      if (!await imageFile.exists()) {
+        final data = await rootBundle.load('assets/image-1.png');
+        await imageFile.writeAsBytes(data.buffer.asUint8List(), flush: true);
+      }
+
+      final prompt = AiPrompt([
+        AiTextPart("Tell me what you see in the image"),
+        AiImagePart(imageFile.path),
+      ]);
+      final response = await chat?.askWithPrompt(prompt).completed();
+
+      debugPrint("$response");
+    } catch (err) {
+      debugPrint("err $err");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = ShadTheme.of(context);
@@ -123,6 +149,10 @@ class _ChatScreenState extends State<ChatScreen> {
         backgroundColor: theme.colorScheme.background,
         scrolledUnderElevation: 0,
         actions: [ChatOptionsIconButton()],
+        leading: IconButton(
+          onPressed: _imageIngestion,
+          icon: Icon(LucideIcons.image),
+        ),
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(1),
           child: Divider(height: 1),
