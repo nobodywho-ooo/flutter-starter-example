@@ -135,7 +135,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
       debugPrint("$response");
     } catch (err) {
-      debugPrint("err $err");
+      debugPrint("_imageIngestion err $err");
     }
   }
 
