@@ -47,17 +47,24 @@ class AiRepository {
       await chatModelFile.writeAsBytes(data.buffer.asUint8List(), flush: true);
     }
 
-    if (!await visionModelFile.exists()) {
-      final visionData = await rootBundle.load('assets/vision-model.gguf');
-      await visionModelFile.writeAsBytes(
-        visionData.buffer.asUint8List(),
-        flush: true,
-      );
+    final File resolvedVisionModelFile;
+    if (Platform.isAndroid) {
+      final externalDir = await getExternalStorageDirectory();
+      resolvedVisionModelFile = File('${externalDir!.path}/vision-model.gguf');
+    } else {
+      resolvedVisionModelFile = visionModelFile;
+      if (!await visionModelFile.exists()) {
+        final visionData = await rootBundle.load('assets/vision-model.gguf');
+        await visionModelFile.writeAsBytes(
+          visionData.buffer.asUint8List(),
+          flush: true,
+        );
+      }
     }
 
     _chatModel = await AiChatModel.load(
       modelPath: chatModelFile.path,
-      imageIngestion: visionModelFile.path,
+      imageIngestion: resolvedVisionModelFile.path,
     );
   }
 
