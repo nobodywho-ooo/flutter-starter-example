@@ -1,10 +1,8 @@
-import 'dart:io';
 import 'dart:math' as math;
 
-import 'package:flutter/services.dart';
+import 'package:flutter_starter_example/helpers/helpers.dart';
 import 'package:flutter_starter_example/models/models.dart';
 import 'package:flutter_starter_example/repositories/repositories.dart';
-import 'package:path_provider/path_provider.dart';
 
 final circleAreaTool = AiTool(
   name: "circle_area",
@@ -38,51 +36,23 @@ class AiRepository {
   AiRepository();
 
   Future<void> loadChatVisionModel() async {
-    final dir = await getApplicationDocumentsDirectory();
-    final chatModelFile = File('${dir.path}/chat-model.gguf');
-    final visionModelFile = File('${dir.path}/vision-model.gguf');
-
-    if (!await chatModelFile.exists()) {
-      final data = await rootBundle.load('assets/chat-model.gguf');
-      await chatModelFile.writeAsBytes(data.buffer.asUint8List(), flush: true);
-    }
-
-    if (!await visionModelFile.exists()) {
-      final visionData = await rootBundle.load('assets/vision-model.gguf');
-      await visionModelFile.writeAsBytes(
-        visionData.buffer.asUint8List(),
-        flush: true,
-      );
-    }
+    final chatModelPath = await copyAssetToDocuments('assets/chat-model.gguf');
+    final visionModelPath = await copyAssetToDocuments('assets/vision-model.gguf');
 
     _chatModel = await AiChatModel.load(
-      modelPath: chatModelFile.path,
-      imageIngestion: visionModelFile.path,
+      modelPath: chatModelPath,
+      imageIngestion: visionModelPath,
     );
   }
 
   Future<void> loadEmbeddingModel() async {
-    final dir = await getApplicationDocumentsDirectory();
-    final fileModel = File('${dir.path}/embedding-model.gguf');
-
-    if (!await fileModel.exists()) {
-      final data = await rootBundle.load('assets/embedding-model.gguf');
-      await fileModel.writeAsBytes(data.buffer.asUint8List(), flush: true);
-    }
-
-    _encoder = await AiEncoder.fromPath(modelPath: fileModel.path);
+    final modelPath = await copyAssetToDocuments('assets/embedding-model.gguf');
+    _encoder = await AiEncoder.fromPath(modelPath: modelPath);
   }
 
   Future<void> loadReRankerModel() async {
-    final dir = await getApplicationDocumentsDirectory();
-    final fileModel = File('${dir.path}/reranker-model.gguf');
-
-    if (!await fileModel.exists()) {
-      final data = await rootBundle.load('assets/reranker-model.gguf');
-      await fileModel.writeAsBytes(data.buffer.asUint8List(), flush: true);
-    }
-
-    _crossEncoder = await AiCrossEncoder.fromPath(modelPath: fileModel.path);
+    final modelPath = await copyAssetToDocuments('assets/reranker-model.gguf');
+    _crossEncoder = await AiCrossEncoder.fromPath(modelPath: modelPath);
   }
 
   void dispose() {
