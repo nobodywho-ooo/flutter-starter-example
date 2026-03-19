@@ -67,31 +67,36 @@ class AiRepository {
       final chatModelPath = await copyAssetToDocuments(
         'assets/chat-model.gguf',
       );
-      final visionModelPath = await copyAssetToDocuments(
-        'assets/vision-model.gguf',
+      final projectionModelPath = await copyAssetToDocuments(
+        'assets/projection-model.gguf',
       );
 
       _visionChatModel = await AiChatModel.load(
         modelPath: chatModelPath,
-        imageIngestion: visionModelPath,
+        imageIngestion: projectionModelPath,
       );
     } else {
       final dir = await getApplicationDocumentsDirectory();
       final chatModelFile = File('${dir.path}/chat-model.gguf');
-      final visionModelFile = File('${dir.path}/vision-model.gguf');
+      final projectionModelFile = File('${dir.path}/projection-model.gguf');
 
-      final data = await rootBundle.load('assets/chat-model.gguf');
-      await chatModelFile.writeAsBytes(data.buffer.asUint8List(), flush: true);
+      final chatData = await rootBundle.load('assets/chat-model.gguf');
+      await chatModelFile.writeAsBytes(
+        chatData.buffer.asUint8List(),
+        flush: true,
+      );
 
-      final visionData = await rootBundle.load('assets/vision-model.gguf');
-      await visionModelFile.writeAsBytes(
-        visionData.buffer.asUint8List(),
+      final projectionData = await rootBundle.load(
+        'assets/projection-model.gguf',
+      );
+      await projectionModelFile.writeAsBytes(
+        projectionData.buffer.asUint8List(),
         flush: true,
       );
 
       _visionChatModel = await AiChatModel.load(
         modelPath: chatModelFile.path,
-        imageIngestion: visionModelFile.path,
+        imageIngestion: projectionModelFile.path,
       );
     }
   }
