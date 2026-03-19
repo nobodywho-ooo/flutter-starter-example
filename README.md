@@ -15,6 +15,7 @@ This example app illustrates:
 - How to integrate the library into your project
 - How to chat with a model
 - How to deal with embeddings, rerank and RAG
+- How to do image ingestion
 
 The app has been tested and confirmed to work on **iOS, Android, and macOS**, and it should also work on **Linux and Windows**. Flutter web is not currently supported.
 
@@ -33,18 +34,30 @@ This project uses common libraries such as `get_it` and `path_provider`.
 ### 2. Download Models
 
 #### Automated Download (Recommended)
-- **macOS/Linux**: Run `./scripts/download_chat_model.sh && ./scripts/download_embedding_rerank.sh`
-- **Windows**: Run `.\scripts\download_chat_model.ps1; .\scripts\download_embedding_rerank.ps1`
+
+Test chat only
+
+- **macOS/Linux**: Run `./scripts/download_chat_model.sh`
+- **Windows**: Run `.\scripts\download_chat_model.ps1;`
+
+Test all the features
+
+- **macOS/Linux**: Run `./scripts/download_chat_vision.sh && ./scripts/download_embedding_rerank.sh`
+- **Windows**: Run `.\scripts\download_chat_vision.ps1; .\scripts\download_embedding_rerank.ps1`
 
 `download_chat_model` will automatically download the [Qwen3-0.6B model](https://huggingface.co/NobodyWho/Qwen_Qwen3-0.6B-GGUF/resolve/main/Qwen_Qwen3-0.6B-Q4_K_M.gguf), rename it to `chat-model.gguf`, and place it in the `assets` folder.
 
 `download_embedding_rerank`, it will download for you [bge-small-en-v1.5](https://huggingface.co/CompendiumLabs/bge-small-en-v1.5-gguf/resolve/main/bge-small-en-v1.5-q8_0.gguf) and [bge-reranker-v2-m3-Q8_0](https://huggingface.co/gpustack/bge-reranker-v2-m3-GGUF/resolve/main/bge-reranker-v2-m3-Q8_0.gguf), place them in the `assets` folder and rename them `embedding-model.gguf` / `reranker-model.gguf`.
 
-Note: if you don't want to try embeddings and rerank/rag, you can simply skip `download_embedding_rerank` script.
+`download_embedding_rerank`, it will download for you [bge-small-en-v1.5](https://huggingface.co/CompendiumLabs/bge-small-en-v1.5-gguf/resolve/main/bge-small-en-v1.5-q8_0.gguf) and [bge-reranker-v2-m3-Q8_0](https://huggingface.co/gpustack/bge-reranker-v2-m3-GGUF/resolve/main/bge-reranker-v2-m3-Q8_0.gguf), place them in the `assets` folder and rename them `embedding-model.gguf` / `reranker-model.gguf`.
 
 #### Manual Download
 
 Alternatively, you can manually download `.gguf` model from Hugging Face. However, not all models are guaranteed to work out of the box, and some may require a powerful machine.
+
+Warnings:
+- reranking/RAG: your chat model needs to support tool calling.
+- vision: your chat model needs to be compatible with your vision model.
 
 ### 3. Run the App
 
@@ -63,7 +76,7 @@ flutter run -d macos
 ## Notes
 
 - **Singleton Usage**: For optimal performance, the NobodyWho engine should be used as a singleton. This example uses `get_it`, but you can replace it with your preferred dependency injection solution.
-- Make sure to delete the app from the simulator/testing device everytime you change a model.
+- Make sure to delete the app from the simulator/testing device everytime you change a model. `flutter clean` & `flutter pub cache clean` can also help with library issues.
 
 ---
 
