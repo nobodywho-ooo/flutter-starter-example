@@ -9,15 +9,14 @@
 
 This starter app demonstrates the capabilities of **[NobodyWho](https://github.com/nobodywho-ooo/nobodywho)**, a library designed to run LLMs locally and efficiently on any device.
 
-## Purpose
+## Features
 
-This example app illustrates:
-- How to integrate the library into your project
-- How to chat with a model
-- How to deal with embeddings, rerank and RAG
-- How to do image ingestion
+- **Chat** — stream responses from a local LLM
+- **Tool calling** — give the model access to custom functions (e.g. weather, calculator)
+- **Vision** — image ingestion with a multimodal model
+- **Embeddings & RAG** — semantic search with an embedding model and cross-encoder reranker
 
-The app has been tested and confirmed to work on **iOS, Android, and macOS**, and it should also work on **Linux and Windows**. Flutter web is not currently supported.
+The app has been tested on **iOS, Android, and macOS**, and should also work on **Linux and Windows**. Flutter Web is not currently supported.
 
 ---
 
@@ -25,49 +24,48 @@ The app has been tested and confirmed to work on **iOS, Android, and macOS**, an
 
 ### 1. Install Dependencies
 
-Run the following command to install the required dependencies:
 ```bash
 flutter pub get
 ```
-This project uses common libraries such as `get_it` and `path_provider`.
 
 ### 2. Download Models
 
-#### Automated Download (Recommended)
+#### Automated (Recommended)
 
-Test chat only
+**Chat only** (minimal setup):
 
-- **macOS/Linux**: Run `./scripts/download_chat_model.sh`
-- **Windows**: Run `.\scripts\download_chat_model.ps1;`
+| Platform       | Command                              |
+|----------------|--------------------------------------|
+| macOS / Linux  | `./scripts/download_chat_model.sh`   |
+| Windows        | `.\scripts\download_chat_model.ps1`  |
 
-Test all the features
+**All features** (chat + vision + embeddings + reranker):
 
-- **macOS/Linux**: Run `./scripts/download_chat_vision.sh && ./scripts/download_embedding_rerank.sh`
-- **Windows**: Run `.\scripts\download_chat_vision.ps1; .\scripts\download_embedding_rerank.ps1`
+| Platform       | Command                                                                               |
+|----------------|---------------------------------------------------------------------------------------|
+| macOS / Linux  | `./scripts/download_chat_vision.sh && ./scripts/download_embedding_rerank.sh`         |
+| Windows        | `.\scripts\download_chat_vision.ps1; .\scripts\download_embedding_rerank.ps1`         |
 
-`download_chat_model` will automatically download the [Qwen3-0.6B model](https://huggingface.co/NobodyWho/Qwen_Qwen3-0.6B-GGUF/resolve/main/Qwen_Qwen3-0.6B-Q4_K_M.gguf), rename it to `chat-model.gguf`, and place it in the `assets` folder.
-
-`download_embedding_rerank`, it will download for you [bge-small-en-v1.5](https://huggingface.co/CompendiumLabs/bge-small-en-v1.5-gguf/resolve/main/bge-small-en-v1.5-q8_0.gguf) and [bge-reranker-v2-m3-Q8_0](https://huggingface.co/gpustack/bge-reranker-v2-m3-GGUF/resolve/main/bge-reranker-v2-m3-Q8_0.gguf), place them in the `assets` folder and rename them `embedding-model.gguf` / `reranker-model.gguf`.
-
-`download_embedding_rerank`, it will download for you [bge-small-en-v1.5](https://huggingface.co/CompendiumLabs/bge-small-en-v1.5-gguf/resolve/main/bge-small-en-v1.5-q8_0.gguf) and [bge-reranker-v2-m3-Q8_0](https://huggingface.co/gpustack/bge-reranker-v2-m3-GGUF/resolve/main/bge-reranker-v2-m3-Q8_0.gguf), place them in the `assets` folder and rename them `embedding-model.gguf` / `reranker-model.gguf`.
+The scripts download models from Hugging Face, rename them, and place them in the `assets/` folder.
 
 #### Manual Download
 
-Alternatively, you can manually download `.gguf` model from Hugging Face. However, not all models are guaranteed to work out of the box, and some may require a powerful machine.
+You can use any `.gguf` model from Hugging Face. Keep in mind:
 
-Warnings:
-- reranking/RAG: your chat model needs to support tool calling.
-- vision: your chat model needs to be compatible with your vision model.
+- **Tool calling**: the chat model must support function/tool calling.
+- **Vision**: the chat model and vision model must be compatible with each other.
 
 ### 3. Run the App
 
-Start the app with:
 ```bash
 flutter run
 ```
 
-Or specify a specific platform:
+Or target a specific platform:
+
 ```bash
+flutter run -d ios
+flutter run -d android
 flutter run -d macos
 ```
 
@@ -75,8 +73,9 @@ flutter run -d macos
 
 ## Notes
 
-- **Singleton Usage**: For optimal performance, the NobodyWho engine should be used as a singleton. This example uses `get_it`, but you can replace it with your preferred dependency injection solution.
-- Make sure to delete the app from the simulator/testing device everytime you change a model. `flutter clean` & `flutter pub cache clean` can also help with library issues.
+- **Singleton**: Keep the NobodyWho engine as a singleton. This example uses `get_it`, but any DI solution works.
+- **Model changes**: After swapping a model file, delete the app from the simulator/device so the old cached model is cleared. `flutter clean` can also help.
+- **iOS / macOS native assets**: If you see an error about `objective_c.dylib` not loading, make sure you have run `flutter config --enable-native-assets` and rebuilt the app.
 
 ---
 
@@ -84,5 +83,5 @@ flutter run -d macos
 
 We welcome your feedback and ideas!
 
-- **Bug Reports & Improvements**: If you encounter a bug or have suggestions for improving this example app, please open an issue on our **[Issues](https://github.com/nobodywho-ooo/flutter-starter-example/issues)** page.
-- **Feature Requests & Questions**: For new feature requests or general questions, join the discussion on our **[Discussions](https://github.com/nobodywho-ooo/flutter-starter-example/discussions)** page.
+- **Bug Reports & Improvements**: Open an issue on the **[Issues](https://github.com/nobodywho-ooo/flutter-starter-example/issues)** page.
+- **Feature Requests & Questions**: Join the discussion on **[Discussions](https://github.com/nobodywho-ooo/flutter-starter-example/discussions)**.
