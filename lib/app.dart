@@ -39,13 +39,19 @@ class _AppState extends State<App> {
 
     try {
       await aiRepository.loadChatModel();
-      aiRepository.createChat(tools: [circleAreaTool, getWeatherTool]);
+      aiRepository.createChat();
+
+      /// Alternative with Tool calling
+      /// -> Give your LLM the ability to interact with the outside world and give extra tools
+      /// ! Make sure your chat model is compatible !
+      /// For e.g: https://huggingface.co/NobodyWho/Qwen_Qwen3-0.6B-GGUF/resolve/main/Qwen_Qwen3-0.6B-Q4_K_M.gguf
+      // aiRepository.createToolCallingChat(tools: [circleAreaTool, getWeatherTool]);
 
       setState(() {
         _appState = .ready;
       });
     } catch (err) {
-      debugPrint("Error :$err");
+      debugPrint("_loadChatModel error :$err");
 
       setState(() {
         _appState = .error;

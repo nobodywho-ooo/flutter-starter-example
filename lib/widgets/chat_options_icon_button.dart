@@ -1,10 +1,14 @@
+import 'dart:io';
 import 'dart:typed_data';
+
 import 'package:flutter_starter_example/service_locator.dart';
 import 'package:flutter_starter_example/repositories/repositories.dart';
 import 'package:flutter_starter_example/models/models.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_starter_example/styles/styles.dart';
 import 'package:nobodywho/nobodywho.dart' as nobodywho;
+import 'package:path_provider/path_provider.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 final _systemPrompt =
@@ -21,7 +25,7 @@ class ChatOptionsIconButton extends StatelessWidget {
       splashColor: Colors.transparent,
       onPressed: () => showModalBottomSheet(
         context: context,
-        builder: (context) => _BottomSheet(),
+        builder: (_) => _BottomSheet(),
       ),
       icon: const Icon(LucideIcons.ellipsis),
     );
@@ -47,6 +51,7 @@ class _BottomSheetState extends State<_BottomSheet> {
   bool _loading = false;
   bool _embeddingsAvailable = false;
   bool _ragAvailable = false;
+  bool _visionAvailable = false;
 
   @override
   void initState() {
@@ -61,6 +66,7 @@ class _BottomSheetState extends State<_BottomSheet> {
 
     try {
       await aiRepository.loadReRankerModel();
+
       setState(() {
         _ragAvailable = true;
       });
@@ -82,6 +88,18 @@ class _BottomSheetState extends State<_BottomSheet> {
       });
     }
 
+    try {
+      await aiRepository.loadChatVisionModel();
+      aiRepository.createVisionChat();
+      setState(() {
+        _visionAvailable = true;
+      });
+    } catch (e) {
+      setState(() {
+        _visionAvailable = false;
+      });
+    }
+
     setState(() {
       _loading = false;
     });
@@ -95,11 +113,7 @@ class _BottomSheetState extends State<_BottomSheet> {
       final encoder = aiRepository.encoder;
       final crossEncoder = aiRepository.crossEncoder;
 
-      if ((encoder, crossEncoder, aiRepository.chat) case (
-        final encoder?,
-        final crossEncoder?,
-        final chat?,
-      )) {
+      if ((encoder, crossEncoder) case (final encoder?, final crossEncoder?)) {
         // Precompute embeddings for all documents
         for (final doc in _knowledgeBase) {
           _docEmbeddings.add(await encoder.encode(text: doc));
@@ -138,24 +152,33 @@ class _BottomSheetState extends State<_BottomSheet> {
               "Search the knowledge base for information relevant to the query",
         );
 
-        aiRepository.createChat(
+        aiRepository.createToolCallingChat(
           tools: [searchTool],
           systemPrompt: _systemPrompt,
         );
 
         final question = "What Python libraries are best for data analysis?";
-        final response = await chat.ask(question).completed();
 
-        if (context.mounted) {
-          Navigator.of(context).pop();
-          _showDialog(
-            context: context,
-            title: question,
-            body: response
-                .replaceAll(RegExp(r'<think>[\s\S]*?</think>\s*'), '')
-                .trimLeft(),
-          );
+        final chat = aiRepository.chatWithToolCalling;
+
+        if (chat case final chat?) {
+          final response = await chat.ask(question).completed();
+
+          if (context.mounted) {
+            Navigator.of(context).pop();
+            _showDialog(
+              context: context,
+              title: question,
+              body: response
+                  .replaceAll(RegExp(r'<think>[\s\S]*?</think>\s*'), '')
+                  .trimLeft(),
+            );
+          }
+        } else {
+          debugPrint("Error _ragDemo chatWithToolCalling not available");
         }
+      } else {
+        debugPrint("Error _ragDemo encoder or crossEncoder not available");
       }
     } catch (err) {
       debugPrint("Error _ragDemo $err");
@@ -167,8 +190,6 @@ class _BottomSheetState extends State<_BottomSheet> {
   }
 
   Future<void> _embeddingDemo(BuildContext context) async {
-    final aiRepository = getIt<AiRepository>();
-
     try {
       final encoder = aiRepository.encoder;
 
@@ -209,9 +230,54 @@ class _BottomSheetState extends State<_BottomSheet> {
           Navigator.of(context).pop();
           _showDialog(context: context, title: query, body: documents[bestIdx]);
         }
+      } else {
+        debugPrint("Error _embeddingDemo encoder not available");
       }
     } catch (err) {
       debugPrint("Error _embeddingDemo $err");
+    }
+  }
+
+  Future<void> _imageIngestionDemo(BuildContext context) async {
+    try {
+      setState(() {
+        _loading = true;
+      });
+      final visionChat = aiRepository.visionChat;
+
+      if (visionChat case final visionChat?) {
+        final dir = await getApplicationDocumentsDirectory();
+        final imageFile = File('${dir.path}/image-1.png');
+
+        if (!await imageFile.exists()) {
+          final data = await rootBundle.load('assets/image-1.png');
+          await imageFile.writeAsBytes(data.buffer.asUint8List(), flush: true);
+        }
+
+        final prompt = AiPrompt([
+          AiTextPart("Describe what you see in the image"),
+          AiImagePart(imageFile.path),
+        ]);
+
+        final response = await visionChat.askWithPrompt(prompt).completed();
+
+        if (context.mounted) {
+          Navigator.of(context).pop();
+          _showDialog(
+            context: context,
+            title: "Image description",
+            body: response,
+          );
+        }
+      } else {
+        debugPrint("Error _imageIngestion visionChat not available");
+      }
+    } catch (err) {
+      debugPrint("Error _imageIngestion $err");
+    } finally {
+      setState(() {
+        _loading = false;
+      });
     }
   }
 
@@ -247,7 +313,7 @@ class _BottomSheetState extends State<_BottomSheet> {
 
     return SizedBox(
       width: double.infinity,
-      height: 350,
+      height: 400,
       child: Padding(
         padding: Spacings.xl.horizontal,
         child: _loading
@@ -306,6 +372,27 @@ class _BottomSheetState extends State<_BottomSheet> {
                       ),
                     ),
                     onTap: () => _ragDemo(context),
+                  ),
+                  Spacings.xs.verticalSpace,
+                  ListTile(
+                    splashColor: Colors.transparent,
+                    leading: const Icon(
+                      LucideIcons.image,
+                      color: Colors.blueGrey,
+                    ),
+                    contentPadding: Spacings.zero.all,
+                    title: Text('Vision', style: textTheme.large),
+                    subtitle: Text(
+                      _visionAvailable
+                          ? 'Demonstrate image ingestion'
+                          : _featureNotAvailable,
+                      style: textTheme.p.copyWith(
+                        color: _visionAvailable
+                            ? theme.colorScheme.mutedForeground
+                            : theme.colorScheme.destructive,
+                      ),
+                    ),
+                    onTap: () => _imageIngestionDemo(context),
                   ),
                 ],
               ),

@@ -19,3 +19,6 @@ typedef AiRole = nobodywho.Role;
 
 typedef AiSamplerPresets = nobodywho.SamplerPresets;
 typedef AiSamplerBuilder = nobodywho.SamplerBuilder;
+typedef AiPrompt = nobodywho.Prompt;
+typedef AiTextPart = nobodywho.TextPart;
+typedef AiImagePart = nobodywho.ImagePart;

@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:math' as math;
 
 import 'package:flutter/services.dart';
+import 'package:flutter_starter_example/helpers/helpers.dart';
 import 'package:flutter_starter_example/models/models.dart';
 import 'package:flutter_starter_example/repositories/repositories.dart';
 import 'package:path_provider/path_provider.dart';
@@ -26,55 +27,121 @@ final getWeatherTool = AiTool(
 
 class AiRepository {
   AiChatModel? _chatModel;
+  AiChatModel? _visionChatModel;
   AiEncoder? _encoder;
   AiCrossEncoder? _crossEncoder;
   AiChat? _chat;
+  AiChat? _chatWithToolCalling;
+  AiChat? _visionChat;
 
   AiChatModel? get chatModel => _chatModel;
+  AiChatModel? get visionChatModel => _visionChatModel;
   AiEncoder? get encoder => _encoder;
   AiCrossEncoder? get crossEncoder => _crossEncoder;
   AiChat? get chat => _chat;
+  AiChat? get chatWithToolCalling => _chatWithToolCalling;
+  AiChat? get visionChat => _visionChat;
 
   AiRepository();
 
   Future<void> loadChatModel() async {
-    final dir = await getApplicationDocumentsDirectory();
-    final fileModel = File('${dir.path}/chat-model.gguf');
+    if (Platform.isAndroid) {
+      final chatModelPath = await copyAssetToDocuments(
+        'assets/chat-model.gguf',
+      );
 
-    if (!await fileModel.exists()) {
+      _chatModel = await AiChatModel.load(modelPath: chatModelPath);
+    } else {
+      final dir = await getApplicationDocumentsDirectory();
+      final chatModelFile = File('${dir.path}/chat-model.gguf');
+
       final data = await rootBundle.load('assets/chat-model.gguf');
-      await fileModel.writeAsBytes(data.buffer.asUint8List(), flush: true);
-    }
+      await chatModelFile.writeAsBytes(data.buffer.asUint8List(), flush: true);
 
-    _chatModel = await AiChatModel.load(modelPath: fileModel.path);
+      _chatModel = await AiChatModel.load(modelPath: chatModelFile.path);
+    }
+  }
+
+  Future<void> loadChatVisionModel() async {
+    if (Platform.isAndroid) {
+      final chatModelPath = await copyAssetToDocuments(
+        'assets/chat-model.gguf',
+      );
+      final projectionModelPath = await copyAssetToDocuments(
+        'assets/projection-model.gguf',
+      );
+
+      _visionChatModel = await AiChatModel.load(
+        modelPath: chatModelPath,
+        imageIngestion: projectionModelPath,
+      );
+    } else {
+      final dir = await getApplicationDocumentsDirectory();
+      final chatModelFile = File('${dir.path}/chat-model.gguf');
+      final projectionModelFile = File('${dir.path}/projection-model.gguf');
+
+      final chatData = await rootBundle.load('assets/chat-model.gguf');
+      await chatModelFile.writeAsBytes(
+        chatData.buffer.asUint8List(),
+        flush: true,
+      );
+
+      final projectionData = await rootBundle.load(
+        'assets/projection-model.gguf',
+      );
+      await projectionModelFile.writeAsBytes(
+        projectionData.buffer.asUint8List(),
+        flush: true,
+      );
+
+      _visionChatModel = await AiChatModel.load(
+        modelPath: chatModelFile.path,
+        imageIngestion: projectionModelFile.path,
+      );
+    }
   }
 
   Future<void> loadEmbeddingModel() async {
-    final dir = await getApplicationDocumentsDirectory();
-    final fileModel = File('${dir.path}/embedding-model.gguf');
+    if (Platform.isAndroid) {
+      final modelPath = await copyAssetToDocuments(
+        'assets/embedding-model.gguf',
+      );
+      _encoder = await AiEncoder.fromPath(modelPath: modelPath);
+    } else {
+      final dir = await getApplicationDocumentsDirectory();
+      final fileModel = File('${dir.path}/embedding-model.gguf');
 
-    if (!await fileModel.exists()) {
       final data = await rootBundle.load('assets/embedding-model.gguf');
       await fileModel.writeAsBytes(data.buffer.asUint8List(), flush: true);
-    }
 
-    _encoder = await AiEncoder.fromPath(modelPath: fileModel.path);
+      _encoder = await AiEncoder.fromPath(modelPath: fileModel.path);
+    }
   }
 
   Future<void> loadReRankerModel() async {
-    final dir = await getApplicationDocumentsDirectory();
-    final fileModel = File('${dir.path}/reranker-model.gguf');
+    if (Platform.isAndroid) {
+      final modelPath = await copyAssetToDocuments(
+        'assets/reranker-model.gguf',
+      );
+      _crossEncoder = await AiCrossEncoder.fromPath(modelPath: modelPath);
+    } else {
+      final dir = await getApplicationDocumentsDirectory();
+      final fileModel = File('${dir.path}/reranker-model.gguf');
 
-    if (!await fileModel.exists()) {
       final data = await rootBundle.load('assets/reranker-model.gguf');
       await fileModel.writeAsBytes(data.buffer.asUint8List(), flush: true);
-    }
 
-    _crossEncoder = await AiCrossEncoder.fromPath(modelPath: fileModel.path);
+      _crossEncoder = await AiCrossEncoder.fromPath(modelPath: fileModel.path);
+    }
   }
 
   void dispose() {
     if (_chatModel case final model?) {
+      if (!model.isDisposed) {
+        model.dispose();
+      }
+    }
+    if (_visionChatModel case final model?) {
       if (!model.isDisposed) {
         model.dispose();
       }
@@ -91,11 +158,10 @@ class AiRepository {
     }
   }
 
-  void createChat({List<AiTool> tools = const [], String? systemPrompt}) {
+  void createChat({String? systemPrompt}) {
     if (_chatModel case final model?) {
       _chat = AiChat(
         model: model,
-        tools: tools,
         systemPrompt: systemPrompt,
         // Sampler example
         // sampler: AiSamplerBuilder()
@@ -103,6 +169,25 @@ class AiRepository {
         //     .topK(topK: 5)
         //     .dist(),
       );
+    }
+  }
+
+  void createToolCallingChat({
+    List<AiTool> tools = const [],
+    String? systemPrompt,
+  }) {
+    if (_chatModel case final model?) {
+      _chatWithToolCalling = AiChat(
+        model: model,
+        tools: tools,
+        systemPrompt: systemPrompt,
+      );
+    }
+  }
+
+  void createVisionChat({String? systemPrompt}) {
+    if (_visionChatModel case final model?) {
+      _visionChat = AiChat(model: model, systemPrompt: systemPrompt);
     }
   }
 }
