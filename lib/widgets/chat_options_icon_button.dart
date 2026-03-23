@@ -247,16 +247,24 @@ class _BottomSheetState extends State<_BottomSheet> {
 
       if (visionChat case final visionChat?) {
         final dir = await getApplicationDocumentsDirectory();
-        final imageFile = File('${dir.path}/image-1.png');
+        final image1File = File('${dir.path}/image-1.png');
+        final image2File = File('${dir.path}/image-2.png');
 
-        if (!await imageFile.exists()) {
+        if (!await image1File.exists()) {
           final data = await rootBundle.load('assets/image-1.png');
-          await imageFile.writeAsBytes(data.buffer.asUint8List(), flush: true);
+          await image1File.writeAsBytes(data.buffer.asUint8List(), flush: true);
+        }
+
+        if (!await image2File.exists()) {
+          final data = await rootBundle.load('assets/image-2.png');
+          await image2File.writeAsBytes(data.buffer.asUint8List(), flush: true);
         }
 
         final prompt = AiPrompt([
-          AiTextPart("Describe what you see in the image"),
-          AiImagePart(imageFile.path),
+          AiTextPart("Tell me what you see in the first image."),
+          AiImagePart(image1File.path),
+          AiTextPart("Also tell me what you see in the second image."),
+          AiImagePart(image2File.path),
         ]);
 
         final response = await visionChat.askWithPrompt(prompt).completed();

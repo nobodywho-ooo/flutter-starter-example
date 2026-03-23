@@ -364,10 +364,10 @@ packages:
     dependency: "direct main"
     description:
       name: nobodywho
-      sha256: cde33be40d09180180993e7f055bf9d31915141c5654f870d8ba2cc06d512273
+      sha256: "8ca8b33e89082c5fa9cb97c8081b36477c20aa3ced9b876bd08520db269f844b"
       url: "https://pub.dev"
     source: hosted
-    version: "0.5.1"
+    version: "0.5.2"
   objective_c:
     dependency: transitive
     description:
