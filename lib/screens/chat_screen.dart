@@ -3,6 +3,7 @@ import 'package:flutter_starter_example/helpers/helpers.dart';
 import 'package:flutter_starter_example/service_locator.dart';
 import 'package:flutter_starter_example/repositories/repositories.dart';
 import 'package:flutter_starter_example/models/models.dart';
+import 'package:flutter_starter_example/styles/styles.dart';
 import 'package:flutter_starter_example/widgets/widgets.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
@@ -19,6 +20,7 @@ class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _textController = TextEditingController();
 
   String? _streamingContent;
+  String? _inferenceStats;
   bool _responding = false;
   bool _thinking = false;
 
@@ -50,13 +52,38 @@ class _ChatScreenState extends State<ChatScreen> {
 
       try {
         final tokenStream = skipThinkingTags(chat.ask(userInput));
+        final startTime = DateTime.now();
+        DateTime? firstTokenTime;
+        int tokenCount = 0;
 
         await for (final token in tokenStream) {
           if (!mounted) return;
 
+          tokenCount++;
+          firstTokenTime ??= DateTime.now();
+
           setState(() {
             _streamingContent = (_streamingContent ?? '') + token;
             _thinking = false;
+          });
+        }
+
+        // Calculate inference stats
+        if (firstTokenTime != null && tokenCount > 0) {
+          final ttft = firstTokenTime.difference(startTime).inMilliseconds;
+          final totalMs = DateTime.now()
+              .difference(firstTokenTime)
+              .inMilliseconds;
+          final tokensPerSec = totalMs > 0
+              ? (tokenCount / (totalMs / 1000)).toStringAsFixed(1)
+              : '∞';
+          setState(() {
+            _inferenceStats = '$tokensPerSec t/s · TTFT ${ttft}ms';
+          });
+          Future.delayed(const Duration(seconds: 8), () {
+            if (mounted) {
+              setState(() => _inferenceStats = null);
+            }
           });
         }
 
@@ -130,21 +157,36 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
       backgroundColor: theme.colorScheme.background,
       body: SafeArea(
-        child: Column(
+        child: Stack(
           children: [
-            Expanded(
-              child: MessageList(
-                messages: _messages,
-                streamingContent: _streamingContent,
-                thinking: _thinking,
+            Column(
+              children: [
+                Expanded(
+                  child: MessageList(
+                    messages: _messages,
+                    streamingContent: _streamingContent,
+                    thinking: _thinking,
+                  ),
+                ),
+                ChatInput(
+                  controller: _textController,
+                  responding: _responding,
+                  onSend: _sendMessage,
+                  onStop: _stopGeneration,
+                ),
+              ],
+            ),
+            if (_inferenceStats case final inferenceStats?)
+              Align(
+                alignment: AlignmentGeometry.topCenter,
+                child: Padding(
+                  padding: Spacings.sm.top,
+                  child: ShadBadge.outline(
+                    backgroundColor: theme.colorScheme.background,
+                    child: Text(inferenceStats),
+                  ),
+                ),
               ),
-            ),
-            ChatInput(
-              controller: _textController,
-              responding: _responding,
-              onSend: _sendMessage,
-              onStop: _stopGeneration,
-            ),
           ],
         ),
       ),

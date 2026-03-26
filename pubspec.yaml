@@ -14,7 +14,7 @@ dependencies:
   http: ^1.6.0
   path_provider: ^2.1.5
   nobodywho: 0.5.2
-  shadcn_ui: ^0.46.1
+  shadcn_ui: ^0.52.3
 
 dev_dependencies:
   flutter_test:
