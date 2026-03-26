@@ -70,15 +70,19 @@ class _ChatScreenState extends State<ChatScreen> {
 
         // Calculate inference stats
         if (firstTokenTime != null && tokenCount > 0) {
-          final ttft = firstTokenTime.difference(startTime).inMilliseconds;
+          final ttftMs = firstTokenTime.difference(startTime).inMilliseconds;
+          final ttft = ttftMs >= 1000
+              ? '${(ttftMs / 1000).toStringAsFixed(1)}s'
+              : '${ttftMs}ms';
           final totalMs = DateTime.now()
               .difference(firstTokenTime)
               .inMilliseconds;
           final tokensPerSec = totalMs > 0
               ? (tokenCount / (totalMs / 1000)).toStringAsFixed(1)
-              : '∞';
+              : '-';
+
           setState(() {
-            _inferenceStats = '$tokensPerSec t/s · TTFT ${ttft}ms';
+            _inferenceStats = '$tokensPerSec t/s · TTFT $ttft';
           });
           Future.delayed(const Duration(seconds: 8), () {
             if (mounted) {
