@@ -7,14 +7,14 @@ import 'package:flutter_starter_example/styles/styles.dart';
 import 'package:flutter_starter_example/widgets/widgets.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
-class ChatScreen extends StatefulWidget {
-  const ChatScreen({super.key});
+class ChatView extends StatefulWidget {
+  const ChatView({super.key});
 
   @override
-  State<ChatScreen> createState() => _ChatScreenState();
+  State<ChatView> createState() => _ChatViewState();
 }
 
-class _ChatScreenState extends State<ChatScreen> {
+class _ChatViewState extends State<ChatView> {
   final chat = getIt<AiRepository>().chat;
   final List<AiMessage> _messages = [];
   final TextEditingController _textController = TextEditingController();

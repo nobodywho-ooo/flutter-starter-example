@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_starter_example/repositories/repositories.dart';
-import 'package:flutter_starter_example/service_locator.dart';
-import 'package:flutter_starter_example/drawer_menu.dart';
-import 'package:flutter_starter_example/widgets/widgets.dart';
+import 'package:flutter_starter_example/screens/screens.dart';
+import 'package:shadcn_ui/shadcn_ui.dart';
 
-enum AppState { loading, error, ready }
+enum Screen {
+  chat('Chat', LucideIcons.messageCircle),
+  embeddings('Embeddings', LucideIcons.search),
+  rag('Rag', LucideIcons.file),
+  vision('Vision', LucideIcons.image),
+  hearing('Hearing', LucideIcons.audioLines);
+
+  final String name;
+  final IconData icon;
+  const Screen(this.name, this.icon);
+}
 
 class App extends StatefulWidget {
   const App({super.key});
@@ -14,61 +22,58 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
-  final aiRepository = getIt<AiRepository>();
+  Screen currentScreen = Screen.chat;
 
-  AppState _appState = .loading;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _loadChatModel();
+  Widget _buildListTile(Screen screen, ShadTextTheme textTheme) {
+    return ListTile(
+      leading: Icon(screen.icon),
+      title: Text(screen.name, style: textTheme.h4),
+      onTap: () => _selectScreen(screen),
+    );
   }
 
-  @override
-  void dispose() {
-    aiRepository.dispose();
-    super.dispose();
-  }
-
-  Future<void> _loadChatModel() async {
+  void _selectScreen(Screen screen) {
+    Navigator.pop(context);
     setState(() {
-      _appState = .loading;
+      currentScreen = screen;
     });
-
-    try {
-      await aiRepository.loadChatModel();
-      aiRepository.createChat();
-
-      /// Alternative with Tool calling
-      /// -> Give your LLM the ability to interact with the outside world and give extra tools
-      /// ! Make sure your chat model is compatible !
-      /// For e.g: https://huggingface.co/NobodyWho/Qwen_Qwen3-0.6B-GGUF/resolve/main/Qwen_Qwen3-0.6B-Q4_K_M.gguf
-      // aiRepository.createToolCallingChat(tools: [circleAreaTool, getWeatherTool]);
-
-      setState(() {
-        _appState = .ready;
-      });
-    } catch (err) {
-      debugPrint("_loadChatModel error :$err");
-
-      setState(() {
-        _appState = .error;
-      });
-    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return switch (_appState) {
-      .loading => Scaffold(body: LoadingIndicator()),
-      .error => Scaffold(
-        body: ErrorIndicator(
-          retry: _loadChatModel,
-          message: "Make sure you have downloaded a chat model",
+    final theme = ShadTheme.of(context);
+    final textTheme = theme.textTheme;
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(currentScreen.name, style: theme.textTheme.h4),
+        backgroundColor: theme.colorScheme.background,
+        scrolledUnderElevation: 0,
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(1),
+          child: Divider(height: 1),
         ),
       ),
-      .ready => DrawerMenu(),
-    };
+      backgroundColor: theme.colorScheme.background,
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(child: Text('NobodyWho', style: textTheme.h4)),
+            for (final screen in Screen.values)
+              _buildListTile(screen, textTheme),
+          ],
+        ),
+      ),
+      body: SafeArea(
+        child: switch (currentScreen) {
+          Screen.chat => ChatScreen(),
+          Screen.embeddings => EmbeddingsScreen(),
+          Screen.rag => RagScreen(),
+          Screen.vision => VisionScreen(),
+          Screen.hearing => HearingScreen(),
+        },
+      ),
+    );
   }
 }
