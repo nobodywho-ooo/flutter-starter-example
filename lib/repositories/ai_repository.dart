@@ -27,20 +27,20 @@ final getWeatherTool = AiTool(
 
 class AiRepository {
   AiChatModel? _chatModel;
-  AiChatModel? _visionChatModel;
+  AiChatModel? _visionHearingChatModel;
   AiEncoder? _encoder;
   AiCrossEncoder? _crossEncoder;
   AiChat? _chat;
   AiChat? _chatWithToolCalling;
-  AiChat? _visionChat;
+  AiChat? _visionHearingChat;
 
   AiChatModel? get chatModel => _chatModel;
-  AiChatModel? get visionChatModel => _visionChatModel;
+  AiChatModel? get visionHearingChatModel => _visionHearingChatModel;
   AiEncoder? get encoder => _encoder;
   AiCrossEncoder? get crossEncoder => _crossEncoder;
   AiChat? get chat => _chat;
   AiChat? get chatWithToolCalling => _chatWithToolCalling;
-  AiChat? get visionChat => _visionChat;
+  AiChat? get visionHearingChat => _visionHearingChat;
 
   AiRepository();
 
@@ -62,7 +62,7 @@ class AiRepository {
     }
   }
 
-  Future<void> loadChatVisionModel() async {
+  Future<void> loadChatVisionHearingModel() async {
     if (Platform.isAndroid) {
       final chatModelPath = await copyAssetToDocuments(
         'assets/chat-model.gguf',
@@ -71,7 +71,7 @@ class AiRepository {
         'assets/projection-model.gguf',
       );
 
-      _visionChatModel = await AiChatModel.load(
+      _visionHearingChatModel = await AiChatModel.load(
         modelPath: chatModelPath,
         imageIngestion: projectionModelPath,
       );
@@ -94,7 +94,7 @@ class AiRepository {
         flush: true,
       );
 
-      _visionChatModel = await AiChatModel.load(
+      _visionHearingChatModel = await AiChatModel.load(
         modelPath: chatModelFile.path,
         imageIngestion: projectionModelFile.path,
       );
@@ -141,7 +141,7 @@ class AiRepository {
         model.dispose();
       }
     }
-    if (_visionChatModel case final model?) {
+    if (_visionHearingChatModel case final model?) {
       if (!model.isDisposed) {
         model.dispose();
       }
@@ -185,9 +185,9 @@ class AiRepository {
     }
   }
 
-  void createVisionChat({String? systemPrompt}) {
-    if (_visionChatModel case final model?) {
-      _visionChat = AiChat(model: model, systemPrompt: systemPrompt);
+  void createVisionHearingChat({String? systemPrompt}) {
+    if (_visionHearingChatModel case final model?) {
+      _visionHearingChat = AiChat(model: model, systemPrompt: systemPrompt);
     }
   }
 }

@@ -148,52 +148,37 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     final theme = ShadTheme.of(context);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Chat", style: theme.textTheme.h4),
-        backgroundColor: theme.colorScheme.background,
-        scrolledUnderElevation: 0,
-        actions: [ChatOptionsIconButton()],
-        bottom: PreferredSize(
-          preferredSize: Size.fromHeight(1),
-          child: Divider(height: 1),
-        ),
-      ),
-      backgroundColor: theme.colorScheme.background,
-      body: SafeArea(
-        child: Stack(
+    return Stack(
+      children: [
+        Column(
           children: [
-            Column(
-              children: [
-                Expanded(
-                  child: MessageList(
-                    messages: _messages,
-                    streamingContent: _streamingContent,
-                    thinking: _thinking,
-                  ),
-                ),
-                ChatInput(
-                  controller: _textController,
-                  responding: _responding,
-                  onSend: _sendMessage,
-                  onStop: _stopGeneration,
-                ),
-              ],
-            ),
-            if (_inferenceStats case final inferenceStats?)
-              Align(
-                alignment: AlignmentGeometry.topCenter,
-                child: Padding(
-                  padding: Spacings.sm.top,
-                  child: ShadBadge.outline(
-                    backgroundColor: theme.colorScheme.background,
-                    child: Text(inferenceStats),
-                  ),
-                ),
+            Expanded(
+              child: MessageList(
+                messages: _messages,
+                streamingContent: _streamingContent,
+                thinking: _thinking,
               ),
+            ),
+            ChatInput(
+              controller: _textController,
+              responding: _responding,
+              onSend: _sendMessage,
+              onStop: _stopGeneration,
+            ),
           ],
         ),
-      ),
+        if (_inferenceStats case final inferenceStats?)
+          Align(
+            alignment: AlignmentGeometry.topCenter,
+            child: Padding(
+              padding: Spacings.sm.top,
+              child: ShadBadge.outline(
+                backgroundColor: theme.colorScheme.background,
+                child: Text(inferenceStats),
+              ),
+            ),
+          ),
+      ],
     );
   }
 }
