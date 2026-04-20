@@ -69,17 +69,16 @@ class _HearingScreenState extends State<HearingScreen> {
 
       if (visionHearingChat case final visionHearingChat?) {
         final dir = await getApplicationDocumentsDirectory();
-        final audioFile = File('${dir.path}/audio.png');
+        final audioFile = File('${dir.path}/audio.mp3');
 
         if (!await audioFile.exists()) {
-          final data = await rootBundle.load('assets/audio.png');
+          final data = await rootBundle.load('assets/audio.mp3');
           await audioFile.writeAsBytes(data.buffer.asUint8List(), flush: true);
         }
 
         final prompt = AiPrompt([
           AiTextPart("Tell me what you hear in the audio."),
-          // TODO: change AiImagePart to AiAudioPart when available
-          AiImagePart(audioFile.path),
+          AiAudioPart(audioFile.path),
         ]);
 
         final response = await visionHearingChat
@@ -127,18 +126,15 @@ class _HearingScreenState extends State<HearingScreen> {
       child: Padding(
         padding: Spacings.lg.horizontal,
         child: Column(
+          crossAxisAlignment: .start,
           children: [
             Padding(
               padding: Spacings.xl.top,
-              child: Text("Work in progress...", style: textTheme.h3),
+              child: Text("Transcribe audio.mp3", style: textTheme.h3),
             ),
             Padding(
               padding: Spacings.xl.top,
-              child: ShadButton(
-                onPressed: _runDemo,
-                enabled: false,
-                child: Text("Analyse"),
-              ),
+              child: ShadButton(onPressed: _runDemo, child: Text("Get speech")),
             ),
             if (_runningDemo) ...[
               Padding(

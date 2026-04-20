@@ -73,7 +73,7 @@ class AiRepository {
 
       _visionHearingChatModel = await AiChatModel.load(
         modelPath: chatModelPath,
-        imageIngestion: projectionModelPath,
+        projectionModelPath: projectionModelPath,
       );
     } else {
       final dir = await getApplicationDocumentsDirectory();
@@ -96,7 +96,7 @@ class AiRepository {
 
       _visionHearingChatModel = await AiChatModel.load(
         modelPath: chatModelFile.path,
-        imageIngestion: projectionModelFile.path,
+        projectionModelPath: projectionModelFile.path,
       );
     }
   }

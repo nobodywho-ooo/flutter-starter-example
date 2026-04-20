@@ -6,8 +6,8 @@ $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $projectDir = Split-Path -Parent $scriptDir
 $assetsDir = Join-Path $projectDir "assets"
 
-$chatUrl = "https://huggingface.co/Qwen/Qwen3-VL-2B-Instruct-GGUF/resolve/main/Qwen3VL-2B-Instruct-Q4_K_M.gguf"
-$projectionUrl = "https://huggingface.co/Qwen/Qwen3-VL-2B-Instruct-GGUF/resolve/main/mmproj-Qwen3VL-2B-Instruct-Q8_0.gguf"
+$chatUrl = "https://huggingface.co/unsloth/gemma-4-E2B-it-GGUF/resolve/main/gemma-4-E2B-it-Q3_K_M.gguf"
+$projectionUrl = "https://huggingface.co/unsloth/gemma-4-E2B-it-GGUF/resolve/main/mmproj-BF16.gguf"
 
 $chatOutput = Join-Path $assetsDir "chat-model.gguf"
 $projectionOutput = Join-Path $assetsDir "projection-model.gguf"

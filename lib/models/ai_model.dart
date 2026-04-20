@@ -22,4 +22,4 @@ typedef AiSamplerBuilder = nobodywho.SamplerBuilder;
 typedef AiPrompt = nobodywho.Prompt;
 typedef AiTextPart = nobodywho.TextPart;
 typedef AiImagePart = nobodywho.ImagePart;
-// typedef AiAudioPart = nobodywho.AudioPart;
+typedef AiAudioPart = nobodywho.AudioPart;

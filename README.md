@@ -13,7 +13,7 @@ This starter app demonstrates the capabilities of **[NobodyWho](https://github.c
 
 - **Chat** — stream responses from a local LLM
 - **Tool calling** — give the model access to custom functions (e.g. weather, calculator)
-- **Vision** — image ingestion with a multimodal model
+- **Vision & Hearing** — image & audio ingestion with a multimodal model
 - **Embeddings & RAG** — semantic search with an embedding model and cross-encoder reranker
 
 The app has been tested on **iOS, Android, and macOS**, and should also work on **Linux and Windows**. Flutter Web is not currently supported.
@@ -36,15 +36,15 @@ flutter pub get
 
 | Platform       | Command                              |
 |----------------|--------------------------------------|
-| macOS / Linux  | `./scripts/download_chat_model.sh`   |
-| Windows        | `.\scripts\download_chat_model.ps1`  |
+| macOS / Linux  | `./scripts/download_chat.sh`   |
+| Windows        | `.\scripts\download_chat.ps1`  |
 
 **All features** (chat + vision + embeddings + reranker):
 
 | Platform       | Command                                                                               |
 |----------------|---------------------------------------------------------------------------------------|
-| macOS / Linux  | `./scripts/download_chat_vision.sh && ./scripts/download_embedding_rerank.sh`         |
-| Windows        | `.\scripts\download_chat_vision.ps1; .\scripts\download_embedding_rerank.ps1`         |
+| macOS / Linux  | `./scripts/download_chat_multimodal.sh && ./scripts/download_embedding_rerank.sh`         |
+| Windows        | `.\scripts\download_chat_multimodal.ps1; .\scripts\download_embedding_rerank.ps1`         |
 
 The scripts download models from Hugging Face, rename them, and place them in the `assets/` folder.
 

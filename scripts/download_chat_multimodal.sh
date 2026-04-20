@@ -7,8 +7,8 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROJECT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 ASSETS_DIR="$PROJECT_DIR/assets"
 
-CHAT_URL="https://huggingface.co/Qwen/Qwen3-VL-2B-Instruct-GGUF/resolve/main/Qwen3VL-2B-Instruct-Q4_K_M.gguf"
-PROJECTION_URL="https://huggingface.co/Qwen/Qwen3-VL-2B-Instruct-GGUF/resolve/main/mmproj-Qwen3VL-2B-Instruct-Q8_0.gguf"
+CHAT_URL="https://huggingface.co/unsloth/gemma-4-E2B-it-GGUF/resolve/main/gemma-4-E2B-it-Q3_K_M.gguf"
+PROJECTION_URL="https://huggingface.co/unsloth/gemma-4-E2B-it-GGUF/resolve/main/mmproj-BF16.gguf"
 
 CHAT_OUTPUT="$ASSETS_DIR/chat-model.gguf"
 PROJECTION_OUTPUT="$ASSETS_DIR/projection-model.gguf"
