@@ -53,7 +53,7 @@ The scripts download models from Hugging Face, rename them, and place them in th
 You can use any `.gguf` model from Hugging Face. Keep in mind:
 
 - **Tool calling**: the chat model must support function/tool calling.
-- **Vision & Hearing**: the chat and projection model must be compatible with each other.
+- **Vision & Hearing**: the multimodal model and projection model must be compatible with each other.
 
 ### 3. Run the App
 
@@ -76,6 +76,10 @@ flutter run -d macos
 - **Singleton**: Keep the NobodyWho engine as a singleton. This example uses `get_it`, but any DI solution works.
 - **Model changes**: After swapping a model file, delete the app from the simulator/device so the old cached model is cleared. `flutter clean` can also help.
 - **iOS / macOS native assets**: If you see an error about `objective_c.dylib` not loading, make sure you have run `flutter config --enable-native-assets` and rebuilt the app.
+
+The script `download_chat_multimodal` will download Gemma 4, which is a capable model but a big model, so will only run on flagship phones. Here are some alternatives:
+- Vision: https://huggingface.co/LiquidAI/LFM2-VL-450M-GGUF/tree/main
+- Hearing: https://huggingface.co/ggml-org/ultravox-v0_5-llama-3_2-1b-GGUF/tree/main
 
 ---
 
