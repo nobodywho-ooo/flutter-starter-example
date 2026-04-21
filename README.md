@@ -39,7 +39,7 @@ flutter pub get
 | macOS / Linux  | `./scripts/download_chat.sh`   |
 | Windows        | `.\scripts\download_chat.ps1`  |
 
-**All features** (chat + vision + embeddings + reranker):
+**All features** (chat + vision + hearing + embeddings + reranker):
 
 | Platform       | Command                                                                               |
 |----------------|---------------------------------------------------------------------------------------|
@@ -53,7 +53,7 @@ The scripts download models from Hugging Face, rename them, and place them in th
 You can use any `.gguf` model from Hugging Face. Keep in mind:
 
 - **Tool calling**: the chat model must support function/tool calling.
-- **Vision**: the chat model and vision model must be compatible with each other.
+- **Vision & Hearing**: the chat and projection model must be compatible with each other.
 
 ### 3. Run the App
 
