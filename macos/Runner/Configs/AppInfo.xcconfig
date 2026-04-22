@@ -8,7 +8,7 @@
 PRODUCT_NAME = flutter_starter_example
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.nobodywho.ooo.flutterStarterExample
+PRODUCT_BUNDLE_IDENTIFIER = ai.nobodywho.flutterStarterExample
 
 // The copyright displayed in application information
-PRODUCT_COPYRIGHT = Copyright © 2026 com.nobodywho.ooo. All rights reserved.
+PRODUCT_COPYRIGHT = Copyright © 2026 ai.nobodywho. All rights reserved.

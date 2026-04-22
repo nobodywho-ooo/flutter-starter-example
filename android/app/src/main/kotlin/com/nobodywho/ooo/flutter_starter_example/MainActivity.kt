@@ -1,4 +1,4 @@
-package com.nobodywho.ooo.flutter_starter_example
+package ai.nobodywho.flutter_starter_example
 
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
