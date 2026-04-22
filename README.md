@@ -50,7 +50,21 @@ The scripts download models from Hugging Face, rename them, and place them in th
 
 #### Manual Download
 
-You can use any `.gguf` model from Hugging Face. Keep in mind:
+You can use any `.gguf` model from Hugging Face. 
+
+#### Download with nobodyWho.Chat
+
+Load models directly from Hugging Face at runtime using hf:// URLs (e.g. hf://owner/repo/model.gguf). Also supports plain HTTP/HTTPS URLs. Models are cached locally and re-used on subsequent loads. Works on Android with proper cache directory selection.
+
+Example:
+
+```dart
+final chat = await nobodywho.Chat.fromPath(
+  modelPath: 'hf:NobodyWho/Qwen_Qwen3-0.6B-GGUF/Qwen_Qwen3-0.6B-Q4_K_M.gguf',
+);
+```
+
+Keep in mind:
 
 - **Tool calling**: the chat model must support function/tool calling.
 - **Vision & Hearing**: the multimodal model and projection model must be compatible with each other.
