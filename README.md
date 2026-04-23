@@ -52,7 +52,7 @@ The scripts download models from Hugging Face, rename them, and place them in th
 
 #### Download with nobodyWho.Chat
 
-In production, we recommend downloading models on demand — only when needed — using a library like `background_downloader` for advanced options, or our built-in download method. This keeps your app size small. For development, the simplest approach is to download the models ahead of time and bundle them directly in your assets folder (see script below).
+Load models directly from Hugging Face using `hf://` URLs (e.g. `hf://owner/repo/model.gguf`). Also supports plain HTTP/HTTPS URLs. Models are cached locally and re-used on subsequent loads. Works on Android with proper cache directory selection.
 
 Example:
 
