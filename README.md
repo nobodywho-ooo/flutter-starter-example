@@ -64,13 +64,11 @@ final chat = await nobodywho.Chat.fromPath(
 
 #### Manual Download
 
-You can use any `.gguf` model from [Hugging Face](https://huggingface.co/models). Here are some chat models worth considering: Gwen, Gemma, LFM, Ministral and they can be found [here](https://huggingface.co/unsloth/collections).
+You can use any `.gguf` model from [Hugging Face](https://huggingface.co/models).
 
-Some multimodal models examples:
+**Chat models** — some worth considering: Qwen, Gemma, LFM, and Ministral, available in [this collection](https://huggingface.co/unsloth/collections).
 
-- Vision: https://huggingface.co/LiquidAI/LFM2-VL-450M-GGUF/tree/main
-- Hearing: https://huggingface.co/ggml-org/ultravox-v0_5-llama-3_2-1b-GGUF/tree/main
-- Vision + Hearing: https://huggingface.co/unsloth/gemma-4-E2B-it-GGUF/tree/main (powerful, but for high-end phones)
+**Multimodal models** — some examples by modality: [Vision](https://huggingface.co/LiquidAI/LFM2-VL-450M-GGUF/tree/main), [Hearing](https://huggingface.co/ggml-org/ultravox-v0_5-llama-3_2-1b-GGUF/tree/main), [Vision + Hearing](https://huggingface.co/unsloth/gemma-4-E2B-it-GGUF/tree/main)
 
 Compatibility notes:
 
