@@ -30,6 +30,8 @@ flutter pub get
 
 ### 2. Download Models
 
+In production, we recommend on-demand download, so you download the models when needed, using a library like `background_downloader` for advance options or with our download method. This keeps your app size small. For development, an easy solution is to download the models and include them directly in your assets folder (see script below).
+
 #### Automated (Recommended)
 
 **Chat only** (minimal setup):
@@ -48,13 +50,9 @@ flutter pub get
 
 The scripts download models from Hugging Face, rename them, and place them in the `assets/` folder.
 
-#### Manual Download
-
-You can use any `.gguf` model from Hugging Face. 
-
 #### Download with nobodyWho.Chat
 
-Load models directly from Hugging Face at runtime using hf:// URLs (e.g. hf://owner/repo/model.gguf). Also supports plain HTTP/HTTPS URLs. Models are cached locally and re-used on subsequent loads. Works on Android with proper cache directory selection.
+In production, we recommend downloading models on demand — only when needed — using a library like `background_downloader` for advanced options, or our built-in download method. This keeps your app size small. For development, the simplest approach is to download the models ahead of time and bundle them directly in your assets folder (see script below).
 
 Example:
 
@@ -64,10 +62,30 @@ final chat = await nobodywho.Chat.fromPath(
 );
 ```
 
+#### Manual Download
+
+You can use any `.gguf` model from [Hugging Face](https://huggingface.co/models). Here are some chat models worth considering: Gwen, Gemma, LFM, Ministral and they can be found [here](https://huggingface.co/unsloth/collections).
+
+Some multimodal models examples:
+
+- Vision: https://huggingface.co/LiquidAI/LFM2-VL-450M-GGUF/tree/main
+- Hearing: https://huggingface.co/ggml-org/ultravox-v0_5-llama-3_2-1b-GGUF/tree/main
+- Vision + Hearing: https://huggingface.co/unsloth/gemma-4-E2B-it-GGUF/tree/main (powerful, but for high-end phones)
+
+Compatibility notes:
+
+- Most GGUF models will work, but some may fail due to formatting issues. Here are some [models](https://huggingface.co/NobodyWho/collections) we have made sure they work perfectly.
+- For mobile devices, models under 1 GB tend to run smoothly. As a general rule, the device should have at least twice the available RAM as the model file size. Note that available RAM differs from total RAM — iOS typically reserves around 1–2 GB for the kernel and system processes, while Android overhead varies by manufacturer: roughly 2 GB on stock Android (e.g. Pixel devices), and between 2–4 GB on Samsung, Xiaomi, and Oppo devices due to additional services.
+
 Keep in mind:
 
 - **Tool calling**: the chat model must support function/tool calling.
 - **Vision & Hearing**: the multimodal model and projection model must be compatible with each other.
+
+Minimum recommended specs:
+
+- **iOS**: iPhone 11 or newer with at least 4 GB of RAM.
+- **Android**: Snapdragon 855 / Adreno 640 / 6 GB RAM or better.
 
 ### 3. Run the App
 
@@ -90,10 +108,6 @@ flutter run -d macos
 - **Singleton**: Keep the NobodyWho engine as a singleton. This example uses `get_it`, but any DI solution works.
 - **Model changes**: After swapping a model file, delete the app from the simulator/device so the old cached model is cleared. `flutter clean` can also help.
 - **iOS / macOS native assets**: If you see an error about `objective_c.dylib` not loading, make sure you have run `flutter config --enable-native-assets` and rebuilt the app.
-
-The script `download_chat_multimodal` will download Gemma 4, which is a capable model but a big model, so will only run on flagship phones. Here are some alternatives:
-- Vision: https://huggingface.co/LiquidAI/LFM2-VL-450M-GGUF/tree/main
-- Hearing: https://huggingface.co/ggml-org/ultravox-v0_5-llama-3_2-1b-GGUF/tree/main
 
 ---
 
