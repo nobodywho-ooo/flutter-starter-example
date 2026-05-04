@@ -13,7 +13,7 @@ dependencies:
   gpt_markdown: ^1.1.5
   http: ^1.6.0
   path_provider: ^2.1.5
-  nobodywho: ^1.1.0
+  nobodywho: ^2.0.0
   shadcn_ui: ^0.52.3
 
 dev_dependencies:

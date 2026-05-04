@@ -6,16 +6,14 @@ typedef AiCrossEncoder = nobodywho.CrossEncoder;
 
 typedef AiChat = nobodywho.Chat;
 
-typedef AiMessageRole = nobodywho.Role;
-
 typedef AiMessage = nobodywho.Message;
-typedef AiDefaultMessage = nobodywho.Message_Message;
-typedef AiToolCallsMessage = nobodywho.Message_ToolCalls;
-typedef AiToolRespMessage = nobodywho.Message_ToolResp;
+typedef AiUserMessage = nobodywho.Message_User;
+typedef AiAssistantMessage = nobodywho.Message_Assistant;
+typedef AiSystemMessage = nobodywho.Message_System;
+typedef AiToolMessage = nobodywho.Message_Tool;
 
 typedef AiTool = nobodywho.Tool;
 typedef AiToolCall = nobodywho.ToolCall;
-typedef AiRole = nobodywho.Role;
 
 typedef AiSamplerPresets = nobodywho.SamplerPresets;
 typedef AiSamplerBuilder = nobodywho.SamplerBuilder;

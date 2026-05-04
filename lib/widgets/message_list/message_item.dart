@@ -14,67 +14,63 @@ class MessageItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (message is AiDefaultMessage) {
-      final theme = ShadTheme.of(context);
-      final textTheme = theme.textTheme;
-      final backgroundColor = theme.colorScheme.surfaceMessage;
+    final theme = ShadTheme.of(context);
+    final textTheme = theme.textTheme;
+    final backgroundColor = theme.colorScheme.surfaceMessage;
 
-      final id = hashCode.toString();
-      final content = message.content;
+    final id = hashCode.toString();
+    final content = message.content;
 
-      return switch (message.role) {
-        AiRole.system => Center(
-          key: Key(id),
-          child: Container(
-            margin: Spacings.xs.vertical,
-            padding: Spacings.md.horizontal + Spacings.sm.vertical,
-            decoration: BoxDecoration(
-              color: backgroundColor,
-              borderRadius: BorderRadius.circular(12.0),
-            ),
-            child: Text(
-              content,
-              style: textTheme.p.copyWith(
-                color: Colors.grey.shade500,
-                fontSize: 12.0,
-              ),
-            ),
+    return switch (message) {
+      AiSystemMessage() => Center(
+        key: Key(id),
+        child: Container(
+          margin: Spacings.xs.vertical,
+          padding: Spacings.md.horizontal + Spacings.sm.vertical,
+          decoration: BoxDecoration(
+            color: backgroundColor,
+            borderRadius: BorderRadius.circular(12.0),
           ),
-        ),
-        AiRole.assistant => Padding(
-          key: Key(id),
-          padding:
-              Spacings.md.horizontal +
-              (isLast ? Spacings.zero.vertical : Spacings.xxl.vertical),
-          child: GptMarkdown(
+          child: Text(
             content,
-            style: textTheme.p,
-            highlightBuilder: (context, text, style) =>
-                HighlightText(text: text, style: style),
-          ),
-        ),
-        _ => Align(
-          key: Key(id),
-          alignment: Alignment.centerRight,
-          child: Container(
-            margin: Spacings.xs.horizontal + Spacings.sm.horizontal,
-            constraints: BoxConstraints(
-              maxWidth: MediaQuery.of(context).size.width * 0.85,
-            ),
-            decoration: BoxDecoration(
-              color: backgroundColor,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Padding(
-              padding: Spacings.lg.horizontal + Spacings.md.vertical,
-              child: Text(content, style: textTheme.p),
+            style: textTheme.p.copyWith(
+              color: Colors.grey.shade500,
+              fontSize: 12.0,
             ),
           ),
         ),
-      };
-    }
-
-    // Other types are irrelevant for now
-    return SizedBox.shrink();
+      ),
+      AiAssistantMessage() => Padding(
+        key: Key(id),
+        padding:
+            Spacings.md.horizontal +
+            (isLast ? Spacings.zero.vertical : Spacings.xxl.vertical),
+        child: GptMarkdown(
+          content,
+          style: textTheme.p,
+          highlightBuilder: (context, text, style) =>
+              HighlightText(text: text, style: style),
+        ),
+      ),
+      AiUserMessage() => Align(
+        key: Key(id),
+        alignment: Alignment.centerRight,
+        child: Container(
+          margin: Spacings.xs.horizontal + Spacings.sm.horizontal,
+          constraints: BoxConstraints(
+            maxWidth: MediaQuery.of(context).size.width * 0.85,
+          ),
+          decoration: BoxDecoration(
+            color: backgroundColor,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Padding(
+            padding: Spacings.lg.horizontal + Spacings.md.vertical,
+            child: Text(content, style: textTheme.p),
+          ),
+        ),
+      ),
+      _ => SizedBox.shrink(),
+    };
   }
 }

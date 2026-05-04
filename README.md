@@ -1,4 +1,4 @@
-![Nobody Who](./preview.png)
+![NobodyWho](./preview.png)
 
 [![Discord](https://img.shields.io/discord/1308812521456799765?logo=discord&style=flat-square)](https://discord.gg/qhaMc2qCYB)
 [![Matrix](https://img.shields.io/badge/Matrix-000?logo=matrix&logoColor=fff)](https://matrix.to/#/#nobodywho:matrix.org)
@@ -34,14 +34,14 @@ In production, we recommend on-demand download, so you download the models when 
 
 #### Automated (Recommended)
 
-**Chat only** (minimal setup):
+**Chat only**: minimal setup - ideal if you test on budget phone
 
 | Platform       | Command                              |
 |----------------|--------------------------------------|
 | macOS / Linux  | `./scripts/download_chat.sh`   |
 | Windows        | `.\scripts\download_chat.ps1`  |
 
-**All features** (chat + vision + hearing + embeddings + reranker):
+**All features**: chat + vision + hearing + embeddings + reranker - downloads Gemma 4, which is ideal to run on flagship phone, but slow on old/budget phone
 
 | Platform       | Command                                                                               |
 |----------------|---------------------------------------------------------------------------------------|
@@ -105,7 +105,7 @@ flutter run -d macos
 
 - **Singleton**: Keep the NobodyWho engine as a singleton. This example uses `get_it`, but any DI solution works.
 - **Model changes**: After swapping a model file, delete the app from the simulator/device so the old cached model is cleared. `flutter clean` can also help.
-- **iOS / macOS native assets**: If you see an error about `objective_c.dylib` not loading, make sure you have run `flutter config --enable-native-assets` and rebuilt the app.
+- **iOS / macOS native assets**: If you see an error about `objective_c.dylib` not loading, make sure you have run `flutter config --enable-native-assets` and rebuilt the app. You can also run `make ios-clean` to clean the pods.
 
 ---
 

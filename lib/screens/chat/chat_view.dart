@@ -29,8 +29,7 @@ class _ChatViewState extends State<ChatView> {
     super.initState();
     // System message example
     // _messages.add(
-    //   AiMessage.message(
-    //     role: AiRole.system,
+    //   AiMessage.system(
     //     content: 'Chat ready. Send a message to begin!',
     //   ),
     // );
@@ -43,7 +42,7 @@ class _ChatViewState extends State<ChatView> {
 
     if (chat case final chat?) {
       setState(() {
-        _messages.add(AiMessage.message(role: AiRole.user, content: userInput));
+        _messages.add(AiMessage.user(content: userInput));
         _responding = true;
         _thinking = true;
         _streamingContent = '';
@@ -98,8 +97,12 @@ class _ChatViewState extends State<ChatView> {
           final List<AiMessage> messages = [];
 
           for (var message in history) {
-            // We don't want to display these
-            if (message is AiToolRespMessage || message is AiToolCallsMessage) {
+            if (message is AiToolMessage) {
+              continue;
+            }
+            if (message is AiAssistantMessage &&
+                message.toolCalls != null &&
+                message.content.trim().isEmpty) {
               continue;
             }
 
@@ -122,10 +125,7 @@ class _ChatViewState extends State<ChatView> {
         if (!mounted) return;
         setState(() {
           _messages.add(
-            AiMessage.message(
-              role: AiRole.assistant,
-              content: 'Error: ${e.toString()}',
-            ),
+            AiMessage.assistant(content: 'Error: ${e.toString()}'),
           );
           _streamingContent = null;
         });
