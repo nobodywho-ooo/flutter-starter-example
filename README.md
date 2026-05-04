@@ -34,14 +34,17 @@ In production, we recommend on-demand download, so you download the models when 
 
 #### Automated (Recommended)
 
-**Chat only**: minimal setup - ideal if you test on budget phone
+**Chat only**
+Minimal setup - fast inference, even on old/budget phone.
 
 | Platform       | Command                              |
 |----------------|--------------------------------------|
 | macOS / Linux  | `./scripts/download_chat.sh`   |
 | Windows        | `.\scripts\download_chat.ps1`  |
 
-**All features**: chat + vision + hearing + embeddings + reranker - downloads Gemma 4, which is ideal to run on flagship phone, but slow on old/budget phone
+**All features**
+Chat + vision + hearing + embeddings + reranker
+Downloads Gemma 4, which runs well on flagship phone, but can be slow on old/budget phone
 
 | Platform       | Command                                                                               |
 |----------------|---------------------------------------------------------------------------------------|
