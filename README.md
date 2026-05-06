@@ -44,7 +44,7 @@ Minimal setup - fast inference, even on old/budget phone.
 
 **All features**
 Chat + vision + hearing + embeddings + reranker
-Downloads Gemma 4, which runs well on flagship phone, but can be slow on old/budget phone
+Downloads Gemma 4, which runs well on flagship phone, but might not work or be slow on old/budget phone.
 
 | Platform       | Command                                                                               |
 |----------------|---------------------------------------------------------------------------------------|
