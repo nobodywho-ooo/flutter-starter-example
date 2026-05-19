@@ -7,10 +7,10 @@ import 'package:gpt_markdown/gpt_markdown.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 class MessageItem extends StatelessWidget {
+  const MessageItem({super.key, required this.message, required this.isLast});
+
   final AiMessage message;
   final bool isLast;
-
-  const MessageItem({super.key, required this.message, required this.isLast});
 
   @override
   Widget build(BuildContext context) {
@@ -29,13 +29,13 @@ class MessageItem extends StatelessWidget {
           padding: Spacings.md.horizontal + Spacings.sm.vertical,
           decoration: BoxDecoration(
             color: backgroundColor,
-            borderRadius: BorderRadius.circular(12.0),
+            borderRadius: BorderRadius.circular(12),
           ),
           child: Text(
             content,
             style: textTheme.p.copyWith(
               color: Colors.grey.shade500,
-              fontSize: 12.0,
+              fontSize: 12,
             ),
           ),
         ),
@@ -58,7 +58,7 @@ class MessageItem extends StatelessWidget {
         child: Container(
           margin: Spacings.xs.horizontal + Spacings.sm.horizontal,
           constraints: BoxConstraints(
-            maxWidth: MediaQuery.of(context).size.width * 0.85,
+            maxWidth: MediaQuery.sizeOf(context).width * 0.85,
           ),
           decoration: BoxDecoration(
             color: backgroundColor,
@@ -70,7 +70,7 @@ class MessageItem extends StatelessWidget {
           ),
         ),
       ),
-      _ => SizedBox.shrink(),
+      _ => const SizedBox.shrink(),
     };
   }
 }

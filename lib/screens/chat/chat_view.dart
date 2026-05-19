@@ -121,12 +121,12 @@ class _ChatViewState extends State<ChatView> {
             _streamingContent = null;
           });
         }
-      } catch (e) {
-        if (!mounted) return;
+      } catch (err) {
+        if (!mounted) {
+          return;
+        }
         setState(() {
-          _messages.add(
-            AiMessage.assistant(content: 'Error: ${e.toString()}'),
-          );
+          _messages.add(AiMessage.assistant(content: 'Error: $err'));
           _streamingContent = null;
         });
       } finally {
