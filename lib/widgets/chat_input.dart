@@ -45,6 +45,14 @@ class ChatInput extends StatelessWidget {
       child: Row(
         crossAxisAlignment: .end,
         children: [
+          ShadIconButton(
+            height: _sendButtonSize,
+            width: _sendButtonSize,
+            onPressed: null,
+            icon: const Icon(LucideIcons.mic),
+            backgroundColor: Colors.blueGrey,
+          ),
+          Spacings.sm.horizontalSpace,
           Expanded(
             child: TextField(
               controller: controller,
@@ -81,20 +89,15 @@ class ChatInput extends StatelessWidget {
                     ? onSend
                     : null;
 
-                if (enabled) {
-                  return ShadIconButton(
-                    height: _sendButtonSize,
-                    width: _sendButtonSize,
-                    onPressed: onPressed,
-                    icon: const Icon(LucideIcons.send),
-                  );
-                }
-
                 return ShadIconButton.secondary(
                   height: _sendButtonSize,
                   width: _sendButtonSize,
                   onPressed: onPressed,
-                  icon: const Icon(LucideIcons.send),
+                  icon: Icon(
+                    LucideIcons.send,
+                    color: enabled ? Colors.white : null,
+                  ),
+                  backgroundColor: enabled ? Colors.blueGrey : null,
                 );
               },
             ),

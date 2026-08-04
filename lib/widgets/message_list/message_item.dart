@@ -45,11 +45,18 @@ class MessageItem extends StatelessWidget {
         padding:
             Spacings.md.horizontal +
             (isLast ? Spacings.zero.vertical : Spacings.xxl.vertical),
-        child: GptMarkdown(
-          content,
-          style: textTheme.p,
-          highlightBuilder: (context, text, style) =>
-              HighlightText(text: text, style: style),
+        child: Column(
+          crossAxisAlignment: .start,
+          children: [
+            GptMarkdown(
+              content,
+              style: textTheme.p,
+              highlightBuilder: (context, text, style) =>
+                  HighlightText(text: text, style: style),
+            ),
+            Spacings.sm.verticalSpace,
+            const Icon(LucideIcons.volume2, color: Colors.blueGrey),
+          ],
         ),
       ),
       AiUserMessage() => Align(
