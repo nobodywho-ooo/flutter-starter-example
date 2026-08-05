@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_starter_example/styles/styles.dart';
+import 'package:flutter_starter_example/widgets/stt_button.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 const _iconButtonSize = 26.0;
@@ -76,17 +77,21 @@ class ChatInput extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: .spaceBetween,
                       children: [
-                        const Icon(
-                          LucideIcons.mic,
+                        SttButton(
+                          controller: controller,
                           size: _iconButtonSize,
-                          color: Colors.blueGrey,
+                          enabled: !responding,
                         ),
                         if (responding)
                           Padding(
                             padding: Spacings.xs.bottom,
-                            child: ShadIconButton.destructive(
-                              onPressed: onStop,
-                              icon: const Icon(Icons.stop_rounded),
+                            child: GestureDetector(
+                              onTap: onStop,
+                              child: Icon(
+                                LucideIcons.circleStop,
+                                color: Colors.red,
+                                size: _iconButtonSize,
+                              ),
                             ),
                           )
                         else

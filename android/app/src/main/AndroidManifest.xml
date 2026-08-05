@@ -1,6 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- Required so NobodyWho can download the TTS model from Hugging Face. -->
+    <!-- Required so NobodyWho can download the TTS/STT models from Hugging Face. -->
     <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- Required to record audio for speech-to-text transcription. -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
     <application
         android:label="flutter_starter_example"
         android:name="${applicationName}"

@@ -4,6 +4,7 @@ typedef AiChatModel = nobodywho.Model;
 typedef AiEncoder = nobodywho.Encoder;
 typedef AiCrossEncoder = nobodywho.CrossEncoder;
 typedef AiTts = nobodywho.Tts;
+typedef AiStt = nobodywho.Stt;
 
 typedef AiChat = nobodywho.Chat;
 

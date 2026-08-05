@@ -34,8 +34,10 @@ class AiRepository {
   AiChat? _chatWithToolCalling;
   AiChat? _visionHearingChat;
   AiTts? _tts;
+  AiStt? _stt;
 
   Future<void>? _loadTtsFuture;
+  Future<void>? _loadSttFuture;
 
   AiChatModel? get chatModel => _chatModel;
   AiChatModel? get visionHearingChatModel => _visionHearingChatModel;
@@ -45,6 +47,7 @@ class AiRepository {
   AiChat? get chatWithToolCalling => _chatWithToolCalling;
   AiChat? get visionHearingChat => _visionHearingChat;
   AiTts? get tts => _tts;
+  AiStt? get stt => _stt;
 
   AiRepository();
 
@@ -168,6 +171,39 @@ class AiRepository {
     await file.writeAsBytes(bytes, flush: true);
 
     return file;
+  }
+
+  Future<void> loadSttModel() {
+    if (_stt != null) return Future.value();
+    return _loadSttFuture ??= _doLoadSttModel().catchError((Object err) {
+      _loadSttFuture = null;
+      throw err;
+    });
+  }
+
+  Future<void> _doLoadSttModel() async {
+    _stt = AiStt(source: 'hf://onnx-community/whisper-base', language: 'en');
+  }
+
+  /// Transcribes the audio file at [path] into text, loading the STT model on first use.
+  Future<String> transcribe(String path) async {
+    await loadSttModel();
+    final transcript = await _stt!.transcribeFile(path).completed();
+    return _cleanTranscript(transcript);
+  }
+
+  /// Removes Whisper's non-speech annotations, which it emits when there is
+  /// little or no speech, e.g. `[BLANK_AUDIO]`, `[SILENCE]`, `(music)` or `♪`.
+  String _cleanTranscript(String text) {
+    return text
+        // Bracketed / parenthesised annotations, e.g. [BLANK_AUDIO], (music).
+        .replaceAll(RegExp(r'\[[^\]]*\]'), '')
+        .replaceAll(RegExp(r'\([^)]*\)'), '')
+        // Musical / sound markers around lyrics and effects.
+        .replaceAll(RegExp(r'[♪♩♫♬*]'), '')
+        // Collapse the whitespace left behind.
+        .replaceAll(RegExp(r'\s+'), ' ')
+        .trim();
   }
 
   void dispose() {

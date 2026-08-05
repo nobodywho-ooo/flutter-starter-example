@@ -73,7 +73,7 @@ class MessageItem extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
           ),
           child: Padding(
-            padding: Spacings.lg.horizontal + Spacings.md.vertical,
+            padding: Spacings.lg.horizontal + Spacings.sm.vertical,
             child: Text(content, style: textTheme.p),
           ),
         ),
