@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_starter_example/models/models.dart';
 import 'package:flutter_starter_example/theme/theme.dart';
 import 'package:flutter_starter_example/widgets/message_list/highlight_text.dart';
+import 'package:flutter_starter_example/widgets/message_list/tts_button.dart';
 import 'package:flutter_starter_example/styles/styles.dart';
 import 'package:gpt_markdown/gpt_markdown.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -55,7 +56,7 @@ class MessageItem extends StatelessWidget {
                   HighlightText(text: text, style: style),
             ),
             Spacings.sm.verticalSpace,
-            const Icon(LucideIcons.volume2, color: Colors.blueGrey),
+            TtsButton(text: content),
           ],
         ),
       ),

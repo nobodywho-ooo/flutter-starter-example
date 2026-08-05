@@ -33,6 +33,9 @@ class AiRepository {
   AiChat? _chat;
   AiChat? _chatWithToolCalling;
   AiChat? _visionHearingChat;
+  AiTts? _tts;
+
+  Future<void>? _loadTtsFuture;
 
   AiChatModel? get chatModel => _chatModel;
   AiChatModel? get visionHearingChatModel => _visionHearingChatModel;
@@ -41,6 +44,7 @@ class AiRepository {
   AiChat? get chat => _chat;
   AiChat? get chatWithToolCalling => _chatWithToolCalling;
   AiChat? get visionHearingChat => _visionHearingChat;
+  AiTts? get tts => _tts;
 
   AiRepository();
 
@@ -135,6 +139,37 @@ class AiRepository {
     }
   }
 
+  Future<void> loadTtsModel() {
+    if (_tts != null) return Future.value();
+    return _loadTtsFuture ??= _doLoadTtsModel().catchError((Object err) {
+      _loadTtsFuture = null;
+      throw err;
+    });
+  }
+
+  Future<void> _doLoadTtsModel() async {
+    _tts = await AiTts.load(source: 'hf://Supertone/supertonic-3', voice: 'M1');
+  }
+
+  /// Synthesizes [text] into WAV audio bytes, loading the model on first use.
+  Future<Uint8List> synthesize(String text) async {
+    await loadTtsModel();
+    return _tts!.synthesize(text: text);
+  }
+
+  /// Synthesizes [text] and writes it to a cached WAV file, returning the file.
+  Future<File> synthesizeToFile(String text) async {
+    final dir = await getTemporaryDirectory();
+    final file = File('${dir.path}/tts_${text.hashCode}.wav');
+
+    if (await file.exists()) return file;
+
+    final bytes = await synthesize(text);
+    await file.writeAsBytes(bytes, flush: true);
+
+    return file;
+  }
+
   void dispose() {
     if (_chatModel case final model?) {
       if (!model.isDisposed) {
@@ -154,6 +189,11 @@ class AiRepository {
     if (_crossEncoder case final model?) {
       if (!model.isDisposed) {
         model.dispose();
+      }
+    }
+    if (_tts case final tts?) {
+      if (!tts.isDisposed) {
+        tts.dispose();
       }
     }
   }

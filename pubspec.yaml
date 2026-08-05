@@ -12,8 +12,9 @@ dependencies:
   get_it: ^9.2.1
   gpt_markdown: ^1.1.8
   http: ^1.6.0
-  path_provider: ^2.1.6
+  just_audio: ^0.10.6
   nobodywho: 2.5.0
+  path_provider: ^2.1.6
   shadcn_ui: ^0.56.0
 
 dev_dependencies:
