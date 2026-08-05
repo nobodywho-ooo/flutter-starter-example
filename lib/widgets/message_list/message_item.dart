@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_starter_example/models/models.dart';
 import 'package:flutter_starter_example/theme/theme.dart';
 import 'package:flutter_starter_example/widgets/message_list/highlight_text.dart';
+import 'package:flutter_starter_example/widgets/message_list/tts_button.dart';
 import 'package:flutter_starter_example/styles/styles.dart';
 import 'package:gpt_markdown/gpt_markdown.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -45,11 +46,18 @@ class MessageItem extends StatelessWidget {
         padding:
             Spacings.md.horizontal +
             (isLast ? Spacings.zero.vertical : Spacings.xxl.vertical),
-        child: GptMarkdown(
-          content,
-          style: textTheme.p,
-          highlightBuilder: (context, text, style) =>
-              HighlightText(text: text, style: style),
+        child: Column(
+          crossAxisAlignment: .start,
+          children: [
+            GptMarkdown(
+              content,
+              style: textTheme.p,
+              highlightBuilder: (context, text, style) =>
+                  HighlightText(text: text, style: style),
+            ),
+            Spacings.sm.verticalSpace,
+            TtsButton(text: content),
+          ],
         ),
       ),
       AiUserMessage() => Align(
@@ -65,7 +73,7 @@ class MessageItem extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
           ),
           child: Padding(
-            padding: Spacings.lg.horizontal + Spacings.md.vertical,
+            padding: Spacings.lg.horizontal + Spacings.sm.vertical,
             child: Text(content, style: textTheme.p),
           ),
         ),

@@ -33,6 +33,11 @@ class AiRepository {
   AiChat? _chat;
   AiChat? _chatWithToolCalling;
   AiChat? _visionHearingChat;
+  AiTts? _tts;
+  AiStt? _stt;
+
+  Future<void>? _loadTtsFuture;
+  Future<void>? _loadSttFuture;
 
   AiChatModel? get chatModel => _chatModel;
   AiChatModel? get visionHearingChatModel => _visionHearingChatModel;
@@ -41,6 +46,8 @@ class AiRepository {
   AiChat? get chat => _chat;
   AiChat? get chatWithToolCalling => _chatWithToolCalling;
   AiChat? get visionHearingChat => _visionHearingChat;
+  AiTts? get tts => _tts;
+  AiStt? get stt => _stt;
 
   AiRepository();
 
@@ -135,6 +142,70 @@ class AiRepository {
     }
   }
 
+  Future<void> loadTtsModel() {
+    if (_tts != null) return Future.value();
+    return _loadTtsFuture ??= _doLoadTtsModel().catchError((Object err) {
+      _loadTtsFuture = null;
+      throw err;
+    });
+  }
+
+  Future<void> _doLoadTtsModel() async {
+    _tts = await AiTts.load(source: 'hf://Supertone/supertonic-3', voice: 'M1');
+  }
+
+  /// Synthesizes [text] into WAV audio bytes, loading the model on first use.
+  Future<Uint8List> synthesize(String text) async {
+    await loadTtsModel();
+    return _tts!.synthesize(text: text);
+  }
+
+  /// Synthesizes [text] and writes it to a cached WAV file, returning the file.
+  Future<File> synthesizeToFile(String text) async {
+    final dir = await getTemporaryDirectory();
+    final file = File('${dir.path}/tts_${text.hashCode}.wav');
+
+    if (await file.exists()) return file;
+
+    final bytes = await synthesize(text);
+    await file.writeAsBytes(bytes, flush: true);
+
+    return file;
+  }
+
+  Future<void> loadSttModel() {
+    if (_stt != null) return Future.value();
+    return _loadSttFuture ??= _doLoadSttModel().catchError((Object err) {
+      _loadSttFuture = null;
+      throw err;
+    });
+  }
+
+  Future<void> _doLoadSttModel() async {
+    _stt = AiStt(source: 'hf://onnx-community/whisper-base', language: 'en');
+  }
+
+  /// Transcribes the audio file at [path] into text, loading the STT model on first use.
+  Future<String> transcribe(String path) async {
+    await loadSttModel();
+    final transcript = await _stt!.transcribeFile(path).completed();
+    return _cleanTranscript(transcript);
+  }
+
+  /// Removes Whisper's non-speech annotations, which it emits when there is
+  /// little or no speech, e.g. `[BLANK_AUDIO]`, `[SILENCE]`, `(music)` or `♪`.
+  String _cleanTranscript(String text) {
+    return text
+        // Bracketed / parenthesised annotations, e.g. [BLANK_AUDIO], (music).
+        .replaceAll(RegExp(r'\[[^\]]*\]'), '')
+        .replaceAll(RegExp(r'\([^)]*\)'), '')
+        // Musical / sound markers around lyrics and effects.
+        .replaceAll(RegExp(r'[♪♩♫♬*]'), '')
+        // Collapse the whitespace left behind.
+        .replaceAll(RegExp(r'\s+'), ' ')
+        .trim();
+  }
+
   void dispose() {
     if (_chatModel case final model?) {
       if (!model.isDisposed) {
@@ -154,6 +225,11 @@ class AiRepository {
     if (_crossEncoder case final model?) {
       if (!model.isDisposed) {
         model.dispose();
+      }
+    }
+    if (_tts case final tts?) {
+      if (!tts.isDisposed) {
+        tts.dispose();
       }
     }
   }

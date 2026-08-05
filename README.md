@@ -1,4 +1,4 @@
-![NobodyWho](./preview.png)
+![NobodyWho Flutter](./flutter-llm-stt-tts.png)
 
 [![Discord](https://img.shields.io/discord/1308812521456799765?logo=discord&style=flat-square)](https://discord.gg/qhaMc2qCYB)
 [![Matrix](https://img.shields.io/badge/Matrix-000?logo=matrix&logoColor=fff)](https://matrix.to/#/#nobodywho:matrix.org)
@@ -15,6 +15,8 @@ This starter app demonstrates the capabilities of **[NobodyWho](https://github.c
 - **Tool calling** — give the model access to custom functions (e.g. weather, calculator)
 - **Vision & Hearing** — image & audio ingestion with a multimodal model
 - **Embeddings & RAG** — semantic search with an embedding model and cross-encoder reranker
+- **Speech to Text** — transcribe audio into text (STT)
+- **Text to Speech** — generate natural-sounding speech from text (TTS)
 
 The app has been tested on **iOS, Android, and macOS**, and should also work on **Linux and Windows**. Flutter Web is not currently supported.
 
@@ -65,13 +67,21 @@ final chat = await nobodywho.Chat.fromPath(
 );
 ```
 
+The STT and TTS features use this method as an example. Besides showcasing another way to download and use a model, direct download suits small models well: the cache is cleared whenever the dev app is deleted, so every model is re-downloaded on the next launch — which is okay when the file is small.
+
 #### Manual Download
 
-You can use any `.gguf` model from [Hugging Face](https://huggingface.co/models).
+For LLMs, you can use any `.gguf` model from [Hugging Face](https://huggingface.co/models). If it's a multimodal model, remember to also download the corresponding projection model, also in `.gguf` format.
 
 **Chat models** — some worth considering: Qwen, Gemma, LFM, and Ministral, available in [this collection](https://huggingface.co/unsloth/collections).
 
 **Multimodal models** — some examples by modality: [Vision](https://huggingface.co/LiquidAI/LFM2-VL-450M-GGUF/tree/main), [Hearing](https://huggingface.co/ggml-org/ultravox-v0_5-llama-3_2-1b-GGUF/tree/main), [Vision + Hearing](https://huggingface.co/unsloth/gemma-4-E2B-it-GGUF/tree/main)
+
+TTS and STT work a bit differently: download the model's files while preserving their relative paths (its folder structure), then pass that folder as the `source`.
+
+**TTS**: NobodyWho supports [Kokoro](https://huggingface.co/NobodyWho/Kokoro-82M), [Pocket TTS](https://huggingface.co/KevinAHM/pocket-tts-onnx) and [Supertonic 3](https://huggingface.co/Supertone/supertonic-3).
+
+**STT**: NobodyWho supports Whisper and you can find many models on [Hugging Face](https://huggingface.co/models?library=onnx&search=whisper). We are using this [one](https://huggingface.co/onnx-community/whisper-base) in this example app, that supports many languages.
 
 Compatibility notes:
 
