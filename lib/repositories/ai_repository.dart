@@ -182,7 +182,10 @@ class AiRepository {
   }
 
   Future<void> _doLoadSttModel() async {
-    _stt = AiStt(source: 'hf://onnx-community/whisper-base', language: 'en');
+    _stt = await AiStt.load(
+      source: 'hf://onnx-community/whisper-base',
+      language: 'en',
+    );
   }
 
   /// Transcribes the audio file at [path] into text, loading the STT model on first use.

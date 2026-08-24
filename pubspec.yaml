@@ -13,7 +13,7 @@ dependencies:
   gpt_markdown: ^1.1.8
   http: ^1.6.0
   just_audio: ^0.10.6
-  nobodywho: 2.5.0
+  nobodywho: 3.0.0
   path_provider: ^2.1.6
   record: ^7.1.1
   shadcn_ui: ^0.56.0
