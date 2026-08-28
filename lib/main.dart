@@ -3,15 +3,25 @@ import 'package:flutter_starter_example/app.dart';
 import 'package:flutter_starter_example/service_locator.dart';
 import 'package:nobodywho/nobodywho.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
+import 'package:logging/logging.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  setupLogging();
 
   await NobodyWho.init();
 
   setup();
 
   runApp(const MainApp());
+}
+
+void setupLogging() {
+  Logger.root.level = Level.CONFIG;
+  Logger.root.onRecord.listen((record) {
+    print('${record.level.name}: ${record.time}: ${record.message}');
+  });
 }
 
 class MainApp extends StatelessWidget {
