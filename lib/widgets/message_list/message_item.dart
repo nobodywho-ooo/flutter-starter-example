@@ -6,6 +6,7 @@ import 'package:flutter_starter_example/widgets/message_list/tts_button.dart';
 import 'package:flutter_starter_example/styles/styles.dart';
 import 'package:gpt_markdown/gpt_markdown.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
+import 'package:nobodywho/nobodywho.dart' as nobodywho;
 
 class MessageItem extends StatelessWidget {
   const MessageItem({super.key, required this.message, required this.isLast});
@@ -20,7 +21,7 @@ class MessageItem extends StatelessWidget {
     final backgroundColor = theme.colorScheme.surfaceMessage;
 
     final id = hashCode.toString();
-    final content = message.content;
+    final content = message.content.text;
 
     return switch (message) {
       AiSystemMessage() => Center(

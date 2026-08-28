@@ -6,6 +6,7 @@ import 'package:flutter_starter_example/models/models.dart';
 import 'package:flutter_starter_example/styles/styles.dart';
 import 'package:flutter_starter_example/widgets/widgets.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
+import 'package:nobodywho/nobodywho.dart' as nobodywho;
 
 class ChatView extends StatefulWidget {
   const ChatView({super.key});
@@ -29,8 +30,8 @@ class _ChatViewState extends State<ChatView> {
     super.initState();
     // System message example
     // _messages.add(
-    //   AiMessage.system(
-    //     content: 'Chat ready. Send a message to begin!',
+    //   nobodywho.systemMessage(
+    //     'Chat ready. Send a message to begin!',
     //   ),
     // );
   }
@@ -42,7 +43,7 @@ class _ChatViewState extends State<ChatView> {
 
     if (chat case final chat?) {
       setState(() {
-        _messages.add(AiMessage.user(content: userInput));
+        _messages.add(nobodywho.userMessage(userInput));
         _responding = true;
         _thinking = true;
         _streamingContent = '';
@@ -102,15 +103,16 @@ class _ChatViewState extends State<ChatView> {
             }
             if (message is AiAssistantMessage &&
                 message.toolCalls != null &&
-                message.content.trim().isEmpty) {
+                message.content.text.trim().isEmpty) {
               continue;
             }
 
             messages.add(
               message.copyWith(
-                content: message.content
+                content: nobodywho.textContent(message.content
+                    .text
                     .replaceAll(RegExp(r'<think>[\s\S]*?</think>\s*'), '')
-                    .trimLeft(),
+                    .trimLeft()),
               ),
             );
           }
@@ -126,7 +128,7 @@ class _ChatViewState extends State<ChatView> {
           return;
         }
         setState(() {
-          _messages.add(AiMessage.assistant(content: 'Error: $err'));
+          _messages.add(nobodywho.assistantMessage('Error: $err'));
           _streamingContent = null;
         });
       } finally {
