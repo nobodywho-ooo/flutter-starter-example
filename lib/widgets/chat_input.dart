@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_starter_example/styles/styles.dart';
 import 'package:flutter_starter_example/widgets/stt_button.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_starter_example/models/models.dart';
 import 'package:flutter_starter_example/theme/theme.dart';
 import 'package:flutter_starter_example/widgets/message_list/highlight_text.dart';
@@ -20,7 +20,7 @@ class MessageItem extends StatelessWidget {
     final backgroundColor = theme.colorScheme.surfaceMessage;
 
     final id = hashCode.toString();
-    final content = message.content;
+    final content = message.content.text;
 
     return switch (message) {
       AiSystemMessage() => Center(

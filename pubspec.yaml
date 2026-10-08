@@ -4,19 +4,20 @@ publish_to: 'none'
 version: 0.1.0+1
 
 environment:
-  sdk: ^3.12.0
+  sdk: ^3.13.5
 
 dependencies:
   flutter:
     sdk: flutter
-  get_it: ^9.2.1
-  gpt_markdown: ^1.1.8
+  get_it: ^9.3.0
+  gpt_markdown: ^1.3.4
   http: ^1.6.0
   just_audio: ^0.10.6
-  nobodywho: 3.0.0
+  material_ui: ^1.6.0
+  nobodywho: 5.0.0
   path_provider: ^2.1.6
   record: ^7.1.1
-  shadcn_ui: ^0.56.0
+  shadcn_ui: ^0.57.1
 
 dev_dependencies:
   flutter_test:

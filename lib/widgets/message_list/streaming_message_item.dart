@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_starter_example/widgets/message_list/highlight_text.dart';
 import 'package:flutter_starter_example/styles/styles.dart';
 import 'package:gpt_markdown/gpt_markdown.dart';

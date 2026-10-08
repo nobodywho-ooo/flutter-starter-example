@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_starter_example/helpers/helpers.dart';
 import 'package:flutter_starter_example/service_locator.dart';
 import 'package:flutter_starter_example/repositories/repositories.dart';
@@ -30,7 +30,7 @@ class _ChatViewState extends State<ChatView> {
     // System message example
     // _messages.add(
     //   AiMessage.system(
-    //     content: 'Chat ready. Send a message to begin!',
+    //     content: aiTextContent('Chat ready. Send a message to begin!'),
     //   ),
     // );
   }
@@ -42,7 +42,7 @@ class _ChatViewState extends State<ChatView> {
 
     if (chat case final chat?) {
       setState(() {
-        _messages.add(AiMessage.user(content: userInput));
+        _messages.add(AiMessage.user(content: aiTextContent(userInput)));
         _responding = true;
         _thinking = true;
         _streamingContent = '';
@@ -102,15 +102,17 @@ class _ChatViewState extends State<ChatView> {
             }
             if (message is AiAssistantMessage &&
                 message.toolCalls != null &&
-                message.content.trim().isEmpty) {
+                message.content.text.trim().isEmpty) {
               continue;
             }
 
             messages.add(
               message.copyWith(
-                content: message.content
-                    .replaceAll(RegExp(r'<think>[\s\S]*?</think>\s*'), '')
-                    .trimLeft(),
+                content: aiTextContent(
+                  message.content.text
+                      .replaceAll(RegExp(r'<think>[\s\S]*?</think>\s*'), '')
+                      .trimLeft(),
+                ),
               ),
             );
           }
@@ -126,7 +128,9 @@ class _ChatViewState extends State<ChatView> {
           return;
         }
         setState(() {
-          _messages.add(AiMessage.assistant(content: 'Error: $err'));
+          _messages.add(
+            AiMessage.assistant(content: aiTextContent('Error: $err')),
+          );
           _streamingContent = null;
         });
       } finally {

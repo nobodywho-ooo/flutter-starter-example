@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_starter_example/repositories/repositories.dart';
 import 'package:flutter_starter_example/service_locator.dart';
 import 'package:flutter_starter_example/styles/styles.dart';

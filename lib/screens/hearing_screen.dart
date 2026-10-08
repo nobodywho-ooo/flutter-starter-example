@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:gpt_markdown/gpt_markdown.dart';
@@ -130,7 +130,7 @@ class _HearingScreenState extends State<HearingScreen> {
           children: [
             Padding(
               padding: Spacings.xl.top,
-              child: Text("Transcribe audio.mp3", style: textTheme.h3),
+              child: Text("Analyze audio.mp3", style: textTheme.h3),
             ),
             Padding(
               padding: Spacings.xl.top,

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_starter_example/models/models.dart';
 import 'package:flutter_starter_example/widgets/message_list/message_item.dart';
 import 'package:flutter_starter_example/widgets/message_list/streaming_message_item.dart';

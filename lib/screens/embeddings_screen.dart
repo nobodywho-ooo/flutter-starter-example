@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_starter_example/styles/styles.dart';
 import 'package:nobodywho/nobodywho.dart' as nobodywho;
 import 'package:shadcn_ui/shadcn_ui.dart';
