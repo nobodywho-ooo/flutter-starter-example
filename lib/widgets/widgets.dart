@@ -7,3 +7,5 @@ export 'package:flutter_starter_example/widgets/message_list/tts_button.dart';
 export 'package:flutter_starter_example/widgets/message_list/streaming_message_item.dart';
 export 'package:flutter_starter_example/widgets/loading_indicator.dart';
 export 'package:flutter_starter_example/widgets/error_indicator.dart';
+export 'package:flutter_starter_example/widgets/pill.dart';
+export 'package:flutter_starter_example/widgets/pill_group.dart';

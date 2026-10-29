@@ -16,6 +16,7 @@ This starter app demonstrates the capabilities of **[NobodyWho](https://github.c
 - **Embeddings & RAG** — semantic search with an embedding model and cross-encoder reranker
 - **Speech to Text** — transcribe audio into text (STT)
 - **Text to Speech** — generate natural-sounding speech from text (TTS)
+- **Classify** - scores predefined answers instead of generating text with Laya decision model
 
 The app has been tested on **iOS, Android, and macOS**, and should also work on **Linux and Windows**. Flutter Web is not currently supported.
 
@@ -66,7 +67,7 @@ final chat = await nobodywho.Chat.fromPath(
 );
 ```
 
-The STT and TTS features use this method as an example. Besides showcasing another way to download and use a model, direct download suits small models well: the cache is cleared whenever the dev app is deleted, so every model is re-downloaded on the next launch — which is okay when the file is small.
+STT, TTS and Decision models use this method as an example. Besides showcasing another way to download and use a model, direct download suits small models well: the cache is cleared whenever the dev app is deleted, so every model is re-downloaded on the next launch — which is okay when the file is small.
 
 #### Manual Download
 

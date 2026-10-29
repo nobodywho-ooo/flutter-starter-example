@@ -14,7 +14,7 @@ dependencies:
   http: ^1.6.0
   just_audio: ^0.10.6
   material_ui: ^1.6.0
-  nobodywho: 5.0.0
+  nobodywho: 6.0.0
   path_provider: ^2.1.6
   record: ^7.1.1
   shadcn_ui: ^0.57.1

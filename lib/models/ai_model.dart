@@ -5,6 +5,7 @@ typedef AiEncoder = nobodywho.Encoder;
 typedef AiCrossEncoder = nobodywho.CrossEncoder;
 typedef AiTts = nobodywho.TextToSpeech;
 typedef AiStt = nobodywho.SpeechToText;
+typedef AiDecision = nobodywho.Decision;
 
 typedef AiChat = nobodywho.Chat;
 

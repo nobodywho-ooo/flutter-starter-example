@@ -7,7 +7,8 @@ enum Screen {
   embeddings('Embeddings', LucideIcons.search),
   rag('Rag', LucideIcons.file),
   vision('Vision', LucideIcons.image),
-  hearing('Hearing', LucideIcons.audioLines);
+  hearing('Hearing', LucideIcons.audioLines),
+  decision('Decision', LucideIcons.split);
 
   final String name;
   final IconData icon;
@@ -72,6 +73,7 @@ class _AppState extends State<App> {
           Screen.rag => RagScreen(),
           Screen.vision => VisionScreen(),
           Screen.hearing => HearingScreen(),
+          Screen.decision => DecisionScreen(),
         },
       ),
     );

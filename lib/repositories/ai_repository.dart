@@ -35,6 +35,7 @@ class AiRepository {
   AiChat? _visionHearingChat;
   AiTts? _tts;
   AiStt? _stt;
+  AiDecision? _decision;
 
   Future<void>? _loadTtsFuture;
   Future<void>? _loadSttFuture;
@@ -48,6 +49,7 @@ class AiRepository {
   AiChat? get visionHearingChat => _visionHearingChat;
   AiTts? get tts => _tts;
   AiStt? get stt => _stt;
+  AiDecision? get decision => _decision;
 
   AiRepository();
 
@@ -209,6 +211,16 @@ class AiRepository {
         .trim();
   }
 
+  Future<void> loadDecisionModel() async {
+    if (_decision != null) {
+      return;
+    }
+
+    _decision = await AiDecision.fromPath(
+      modelPath: 'hf://ggml-org/Laya-GGUF/Laya-Q8_0.gguf',
+    );
+  }
+
   void dispose() {
     if (_chatModel case final model?) {
       if (!model.isDisposed) {
@@ -233,6 +245,11 @@ class AiRepository {
     if (_tts case final tts?) {
       if (!tts.isDisposed) {
         tts.dispose();
+      }
+    }
+    if (_decision case final decision?) {
+      if (!decision.isDisposed) {
+        decision.dispose();
       }
     }
   }
