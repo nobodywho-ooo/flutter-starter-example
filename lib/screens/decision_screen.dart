@@ -117,7 +117,6 @@ class _DecisionScreenState extends State<DecisionScreen> {
             },
             angry: (angry["noul"] as num).toDouble(),
             urgencyScore: (urgency["score"] as num).toDouble(),
-            // Re-key the urgency probabilities by description so they match _urgencyCriteria
             urgencyProbabilities: {
               for (final MapEntry(:key, :value)
                   in (urgency["probabilities"] as Map).entries)
@@ -126,13 +125,13 @@ class _DecisionScreenState extends State<DecisionScreen> {
           );
         });
       } else {
-        debugPrint("Error _decisionDemo decision not available");
+        debugPrint("Error _classify decision not available");
         setState(() {
           _errorDemo = true;
         });
       }
     } catch (err) {
-      debugPrint("Error _decisionDemo $err");
+      debugPrint("Error _classify $err");
       setState(() {
         _errorDemo = true;
       });
