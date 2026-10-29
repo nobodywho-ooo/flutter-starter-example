@@ -14,13 +14,12 @@ final _routeCriteria = {
   "technical": "bugs, errors, login problems",
 };
 
-final _urgencyCriteria = ["can wait", "this week", "today", "right now"];
+final _urgencyCriteria = ["today", "this week", "next month"];
 
 typedef _DecisionResult = ({
   Map<String, double> route,
   double angry,
   double urgencyScore,
-  Map<String, double> urgencyProbabilities,
 });
 
 class DecisionScreen extends StatefulWidget {
@@ -106,7 +105,7 @@ class _DecisionScreenState extends State<DecisionScreen> {
         final route = answers["route"] as Map;
         final angry = answers["angry"] as Map;
         final urgency = answers["urgency"] as Map;
-        final legend = urgency["legend"] as Map;
+        print((urgency["score"] as num).toDouble());
 
         setState(() {
           _result = (
@@ -117,11 +116,6 @@ class _DecisionScreenState extends State<DecisionScreen> {
             },
             angry: (angry["noul"] as num).toDouble(),
             urgencyScore: (urgency["score"] as num).toDouble(),
-            urgencyProbabilities: {
-              for (final MapEntry(:key, :value)
-                  in (urgency["probabilities"] as Map).entries)
-                legend[key] as String: (value as num).toDouble(),
-            },
           );
         });
       } else {
@@ -213,25 +207,7 @@ class _DecisionScreenState extends State<DecisionScreen> {
               ],
             ),
             _buildSectionTitle("Urgency", textTheme),
-            PillGroup(
-              options: [
-                for (final level in _urgencyCriteria)
-                  (
-                    label: level,
-                    probability: result?.urgencyProbabilities[level],
-                  ),
-              ],
-            ),
-            if (result != null)
-              Padding(
-                padding: Spacings.sm.top,
-                child: Text(
-                  "Score: ${result.urgencyScore.toStringAsFixed(2)} "
-                  "(0 = ${_urgencyCriteria.first}, "
-                  "${_urgencyCriteria.length - 1} = ${_urgencyCriteria.last})",
-                  style: textTheme.muted,
-                ),
-              ),
+            ScoreAxis(levels: _urgencyCriteria, score: result?.urgencyScore),
           ],
         ),
       ),

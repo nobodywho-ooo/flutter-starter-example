@@ -9,3 +9,4 @@ export 'package:flutter_starter_example/widgets/loading_indicator.dart';
 export 'package:flutter_starter_example/widgets/error_indicator.dart';
 export 'package:flutter_starter_example/widgets/pill.dart';
 export 'package:flutter_starter_example/widgets/pill_group.dart';
+export 'package:flutter_starter_example/widgets/score_axis.dart';
