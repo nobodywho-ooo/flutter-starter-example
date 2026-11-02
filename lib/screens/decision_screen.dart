@@ -5,21 +5,24 @@ import 'package:flutter_starter_example/service_locator.dart';
 import 'package:flutter_starter_example/repositories/repositories.dart';
 import 'package:flutter_starter_example/widgets/widgets.dart';
 
-final _defaultCustomerMessage =
-    "I was charged twice for my order last week and nobody has replied.";
+final _defaultDiaryEntry =
+    "What a lovely Saturday! Went for a long bike ride along the river with "
+    "Sam, then we had a picnic in the park and the sun came out just in time. "
+    "Finished the evening baking a lemon cake with mum.";
 
-final _routeCriteria = {
-  "billing": "payments, charges, refunds, invoices",
-  "shipping": "delivery, tracking, lost or late parcels",
-  "technical": "bugs, errors, login problems",
+final _topicCriteria = {
+  "work": "job, colleagues, deadlines, career",
+  "relationships": "family, friends, partner",
+  "health": "sleep, exercise, food, illness",
+  "leisure": "hobbies, travel, going out",
 };
 
-final _urgencyCriteria = ["today", "this week", "next month"];
+final _moodCriteria = ["bad", "okay", "great"];
 
 typedef _DecisionResult = ({
-  Map<String, double> route,
-  double angry,
-  double urgencyScore,
+  Map<String, double> topics,
+  double stressed,
+  double moodScore,
 });
 
 class DecisionScreen extends StatefulWidget {
@@ -31,7 +34,7 @@ class DecisionScreen extends StatefulWidget {
 
 class _DecisionScreenState extends State<DecisionScreen> {
   final aiRepository = getIt<AiRepository>();
-  final _controller = TextEditingController(text: _defaultCustomerMessage);
+  final _controller = TextEditingController(text: _defaultDiaryEntry);
 
   bool _errorInit = false;
   bool _errorDemo = false;
@@ -62,11 +65,14 @@ class _DecisionScreenState extends State<DecisionScreen> {
     try {
       await aiRepository.loadDecisionModel();
 
+      // The screen may have been left while the model was loading
+      if (!mounted) return;
       setState(() {
         _runningInit = false;
       });
     } catch (err) {
       debugPrint("Error loadDecisionModel $err");
+      if (!mounted) return;
       setState(() {
         _errorInit = true;
         _runningInit = false;
@@ -84,39 +90,45 @@ class _DecisionScreenState extends State<DecisionScreen> {
       final decision = aiRepository.decision;
 
       if (decision case final decision?) {
-        final response = await decision.decide(
-          state: "Customer message: ${_controller.text}",
+        final result = await decision.decide(
+          state: "Diary entry: ${_controller.text}",
           questions: {
-            "route": {
+            "topics": {
               "type": "choice",
-              "instructions": "Choose the best team for this customer message.",
-              "criteria": _routeCriteria,
+              "instructions": "Choose the main topic of this diary entry",
+              "criteria": _topicCriteria,
             },
-            "angry": {"type": "noul", "instructions": "Is the customer angry?"},
-            "urgency": {
+            "stressed": {
+              "type": "noul",
+              "instructions": "Does the writer sound stressed?",
+            },
+            "mood": {
               "type": "score",
-              "instructions": "How urgent is this?",
-              "criteria": _urgencyCriteria,
+              "instructions": "How is the writer's overall mood?",
+              "criteria": _moodCriteria,
             },
           },
         );
 
-        final answers = (response as Map)["answers"] as Map;
-        final route = answers["route"] as Map;
-        final angry = answers["angry"] as Map;
-        final urgency = answers["urgency"] as Map;
-        print((urgency["score"] as num).toDouble());
+        // The screen may have been left while the model was deciding
+        if (!mounted) return;
+
+        final answers = (result as Map)["answers"] as Map;
+        final topics = answers["topics"] as Map;
+        final stressed = answers["stressed"] as Map;
+        final mood = answers["mood"] as Map;
 
         setState(() {
           _result = (
-            route: {
+            topics: {
               for (final MapEntry(:key, :value)
-                  in (route["probabilities"] as Map).entries)
+                  in (topics["probabilities"] as Map).entries)
                 key as String: (value as num).toDouble(),
             },
-            angry: (angry["noul"] as num).toDouble(),
-            urgencyScore: (urgency["score"] as num).toDouble(),
+            stressed: (stressed["noul"] as num).toDouble(),
+            moodScore: (mood["score"] as num).toDouble(),
           );
+          _hasResults = true;
         });
       } else {
         debugPrint("Error _classify decision not available");
@@ -126,14 +138,16 @@ class _DecisionScreenState extends State<DecisionScreen> {
       }
     } catch (err) {
       debugPrint("Error _classify $err");
+      if (!mounted) return;
       setState(() {
         _errorDemo = true;
       });
     } finally {
-      setState(() {
-        _runningClassify = false;
-        _hasResults = true;
-      });
+      if (mounted) {
+        setState(() {
+          _runningClassify = false;
+        });
+      }
     }
   }
 
@@ -167,11 +181,19 @@ class _DecisionScreenState extends State<DecisionScreen> {
         child: Column(
           crossAxisAlignment: .start,
           children: [
-            _buildSectionTitle("Customer message", textTheme),
+            Padding(
+              padding: Spacings.lg.top,
+              child: Text(
+                "This example simulates a diary app. We use the decision model "
+                "to pick the main topic of a user’s entry, detect stress and rate the mood.",
+                style: textTheme.muted,
+              ),
+            ),
+            _buildSectionTitle("Diary entry", textTheme),
             ShadTextarea(
               controller: _controller,
               enabled: !_runningClassify,
-              placeholder: Text("Type a customer message..."),
+              placeholder: Text("Write an entry..."),
             ),
             Padding(
               padding: Spacings.xl.top,
@@ -181,33 +203,32 @@ class _DecisionScreenState extends State<DecisionScreen> {
                       onPressed: _controller.text.trim().isEmpty
                           ? null
                           : _classify,
-                      child: Text(_hasResults ? "Classify again" : "Classify"),
+                      child: Text(
+                        _hasResults ? "Get insights again" : "Get insights",
+                      ),
                     ),
             ),
             if (_errorDemo)
               Padding(padding: Spacings.xl.vertical, child: ErrorIndicator()),
-            _buildSectionTitle(
-              "Which team should receive the message?",
-              textTheme,
-            ),
+            _buildSectionTitle("What is the entry about?", textTheme),
             PillGroup(
               options: [
-                for (final team in _routeCriteria.keys)
-                  (label: team, probability: result?.route[team]),
+                for (final topic in _topicCriteria.keys)
+                  (label: topic, probability: result?.topics[topic]),
               ],
             ),
-            _buildSectionTitle("Is the customer angry?", textTheme),
+            _buildSectionTitle("Is the user stressed?", textTheme),
             PillGroup(
               options: [
-                (label: "yes", probability: result?.angry),
+                (label: "yes", probability: result?.stressed),
                 (
                   label: "no",
-                  probability: result == null ? null : 1 - result.angry,
+                  probability: result == null ? null : 1 - result.stressed,
                 ),
               ],
             ),
-            _buildSectionTitle("Urgency", textTheme),
-            ScoreAxis(levels: _urgencyCriteria, score: result?.urgencyScore),
+            _buildSectionTitle("Mood", textTheme),
+            ScoreAxis(levels: _moodCriteria, score: result?.moodScore),
           ],
         ),
       ),
