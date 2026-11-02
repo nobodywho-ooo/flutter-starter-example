@@ -23,6 +23,7 @@ typedef _DecisionResult = ({
   Map<String, double> topics,
   double stressed,
   double moodScore,
+  Duration duration,
 });
 
 class DecisionScreen extends StatefulWidget {
@@ -90,6 +91,7 @@ class _DecisionScreenState extends State<DecisionScreen> {
       final decision = aiRepository.decision;
 
       if (decision case final decision?) {
+        final stopwatch = Stopwatch()..start();
         final result = await decision.decide(
           state: "Diary entry: ${_controller.text}",
           questions: {
@@ -109,6 +111,7 @@ class _DecisionScreenState extends State<DecisionScreen> {
             },
           },
         );
+        stopwatch.stop();
 
         // The screen may have been left while the model was deciding
         if (!mounted) return;
@@ -127,6 +130,7 @@ class _DecisionScreenState extends State<DecisionScreen> {
             },
             stressed: (stressed["noul"] as num).toDouble(),
             moodScore: (mood["score"] as num).toDouble(),
+            duration: stopwatch.elapsed,
           );
           _hasResults = true;
         });
@@ -229,6 +233,14 @@ class _DecisionScreenState extends State<DecisionScreen> {
             ),
             _buildSectionTitle("Mood", textTheme),
             ScoreAxis(levels: _moodCriteria, score: result?.moodScore),
+            if (result != null)
+              Padding(
+                padding: Spacings.xl.top,
+                child: Text(
+                  "Decided in ${(result.duration.inMilliseconds / 1000).toStringAsFixed(2)} s",
+                  style: textTheme.muted,
+                ),
+              ),
           ],
         ),
       ),
