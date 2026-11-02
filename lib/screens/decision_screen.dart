@@ -113,10 +113,12 @@ class _DecisionScreenState extends State<DecisionScreen> {
         );
         stopwatch.stop();
 
-        // The screen may have been left while the model was deciding
-        if (!mounted) return;
+        if (!mounted) {
+          return;
+        }
 
         final answers = (result as Map)["answers"] as Map;
+
         final topics = answers["topics"] as Map;
         final stressed = answers["stressed"] as Map;
         final mood = answers["mood"] as Map;
